@@ -4,64 +4,203 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080b12">
-<title>ORVEX MOVIES</title>
+<meta name="theme-color" content="#08090e">
+<title>ORVEX MOVIES | Entertainment</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#080b12;color:white;font-family:Arial,sans-serif}
-header{background:#101522;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
-.logo{color:#e50935;font-size:21px;font-weight:bold}
-nav{display:flex;gap:13px;align-items:center;flex-wrap:wrap}
-nav a{color:white;text-decoration:none;font-size:13px}
-nav button{background:#e50935;color:white;border:0;padding:9px 12px;border-radius:5px}
-.hero{padding:60px 6%;min-height:290px;background:linear-gradient(90deg,#080b12,#080b12aa),url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&q=45');background-size:cover;background-position:center}
-.hero h1{font-size:35px;margin:18px 0}
-.hero p{color:#bbb;line-height:1.6;max-width:450px}
-.hero button,.action{background:#e50935;color:white;border:0;padding:11px 15px;border-radius:5px;margin-top:15px;cursor:pointer}
-.search{padding:20px 5%}
-.search input{width:100%;padding:14px;background:#151c2a;color:white;border:1px solid #293247;border-radius:6px}
-.section{padding:15px 5% 30px}
-.section h2{font-size:20px;border-left:4px solid #e50935;padding-left:10px;margin-bottom:18px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.card{background:#151c2a;border-radius:7px;overflow:hidden}
-.card img{width:100%;aspect-ratio:2/3;object-fit:cover;background:#20283a;display:block}
-.info{padding:10px}
-.info h3{font-size:13px;margin-bottom:6px}
+html{scroll-behavior:smooth}
+body{background:#08090e;color:#fff;font-family:Arial,sans-serif}
+button,a,select{cursor:pointer}
+button{font-family:inherit}
+
+header{
+ background:#10121b;
+ border-bottom:1px solid #252735;
+ padding:13px 5%;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:15px;
+ flex-wrap:wrap;
+ position:sticky;
+ top:0;
+ z-index:10
+}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand-mark{
+ width:39px;height:39px;border:2px solid #ed1745;
+ border-radius:11px;display:grid;place-items:center;
+ position:relative;box-shadow:0 0 15px #ed174533;
+ transform:skew(-5deg)
+}
+.brand-mark:before{
+ content:"";width:19px;height:19px;border:3px solid #fff;
+ border-right-color:#ed1745;border-radius:50%;
+ position:absolute
+}
+.brand-mark:after{
+ content:"";position:absolute;left:15px;top:12px;
+ border-left:10px solid #ed1745;
+ border-top:7px solid transparent;
+ border-bottom:7px solid transparent
+}
+.brand-name{font-size:19px;font-weight:900;letter-spacing:1.5px}
+.brand-name span{color:#ed1745}
+nav{display:flex;gap:15px;align-items:center;flex-wrap:wrap}
+nav a{color:#ddd;text-decoration:none;font-size:13px}
+nav a:hover{color:#ed1745}
+nav button{
+ background:#ed1745;color:white;border:0;
+ padding:10px 14px;border-radius:5px;font-weight:bold
+}
+
+.hero{
+ padding:65px 6%;min-height:330px;
+ background:
+ linear-gradient(90deg,#08090ef5 0%,#08090ebd 55%,#08090e55 100%),
+ url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1000&q=45');
+ background-size:cover;background-position:center;
+ display:flex;flex-direction:column;justify-content:center
+}
+.hero small{color:#ed1745;font-weight:bold;letter-spacing:3px}
+.hero h1{font-size:clamp(32px,6vw,52px);margin:18px 0 12px;max-width:600px}
+.hero h1 span{color:#ed1745}
+.hero p{color:#c1c1ca;line-height:1.7;max-width:460px;font-size:14px}
+.action{
+ background:#ed1745;color:white;border:0;
+ padding:13px 19px;border-radius:5px;
+ margin-top:20px;font-weight:bold
+}
+.action:hover,nav button:hover{background:#bd1035}
+
+.search{padding:22px 5%}
+.search input{
+ width:100%;padding:15px;background:#151722;color:white;
+ border:1px solid #303344;border-radius:7px;font-size:14px
+}
+.search input:focus{outline:1px solid #ed1745}
+
+.section{padding:18px 5% 30px}
+.section h2{
+ font-size:20px;border-left:4px solid #ed1745;
+ padding-left:11px;margin-bottom:18px
+}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.card{
+ background:#151722;border:1px solid #242735;
+ border-radius:9px;overflow:hidden;transition:.2s
+}
+.card:hover{transform:translateY(-3px);border-color:#ed1745}
+.card img{
+ width:100%;aspect-ratio:2/3;object-fit:cover;
+ background:#202333;display:block
+}
+.no-poster{
+ aspect-ratio:2/3;background:linear-gradient(145deg,#202333,#10121b);
+ display:grid;place-items:center;color:#888;font-size:13px
+}
+.info{padding:11px}
+.info h3{font-size:14px;margin-bottom:7px}
 .info p{font-size:11px;color:#aaa}
-.card button{font-size:11px;padding:8px;margin:8px 5px 10px 0;border:0;border-radius:4px;background:#e50935;color:white}
-.card button.secondary{background:#30394b}
+.card button{
+ font-size:11px;padding:9px 10px;margin:10px 5px 10px 0;
+ border:0;border-radius:5px;background:#ed1745;color:white
+}
+.card button.secondary{background:#303443}
+.card button:hover{opacity:.85}
 .message{color:#aaa;font-size:13px;line-height:1.6;grid-column:1/-1}
-#authPanel{display:none;padding:20px 5%}
-.authBox{max-width:430px;margin:auto;background:#151c2a;padding:20px;border-radius:9px}
-.authBox h2{margin-bottom:15px}
-.authBox input{width:100%;padding:13px;margin:7px 0 14px;background:#080f1c;color:white;border:1px solid #303247;border-radius:6px}
-.authBox button{padding:11px 15px;border:0;border-radius:5px;background:#e50935;color:white;margin:5px 5px 5px 0}
-#player{display:none;position:fixed;inset:0;background:#000e;z-index:20;overflow:auto;padding:15px}
-.player{max-width:700px;margin:25px auto;background:#141b29;padding:18px;border-radius:8px}
-.player video{width:100%;background:black;margin-top:15px}
-.player h2{margin:12px 0}
-#close{background:#444;color:white;border:0;padding:10px;border-radius:5px}
-footer{text-align:center;background:#101522;padding:25px;color:#999;font-size:12px}
-@media(max-width:480px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero h1{font-size:29px}nav{gap:9px}}
+
+#authPanel{display:none;padding:22px 5%}
+.authBox{
+ max-width:430px;margin:auto;background:#151722;
+ padding:22px;border:1px solid #303344;border-radius:10px
+}
+.authBox h2{margin-bottom:17px}
+.authBox label{font-size:13px;color:#ccc}
+.authBox input{
+ width:100%;padding:13px;margin:7px 0 14px;
+ background:#090b12;color:white;border:1px solid #303344;border-radius:6px
+}
+.authBox button{
+ padding:11px 15px;border:0;border-radius:5px;
+ background:#ed1745;color:white;margin:5px 5px 5px 0
+}
+
+#player{
+ display:none;position:fixed;inset:0;background:#000e;
+ z-index:30;overflow:auto;padding:15px
+}
+.player{
+ max-width:760px;margin:20px auto;background:#141722;
+ border:1px solid #303344;padding:18px;border-radius:10px
+}
+.player-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.player video{width:100%;background:#000;margin-top:15px;max-height:65vh}
+.player h2{margin:15px 0 8px}
+#playerDescription{color:#bbb;font-size:13px;line-height:1.6}
+#close{background:#343846;color:white;border:0;padding:10px 14px;border-radius:5px}
+.player-controls{
+ display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+ margin-top:15px;padding:13px;background:#202433;border-radius:7px
+}
+.player-controls label{font-size:13px;color:#ddd}
+.player-controls select{
+ background:#10131d;color:white;border:1px solid #45495a;
+ padding:10px;border-radius:5px
+}
+.download{
+ display:inline-block;background:#ed1745;color:white;
+ text-decoration:none;padding:10px 13px;border-radius:5px;
+ font-size:13px;font-weight:bold
+}
+.quality-note{font-size:11px;color:#999;margin-top:10px;line-height:1.5}
+
+footer{
+ text-align:center;background:#10121b;padding:28px 15px;
+ color:#999;font-size:12px;border-top:1px solid #252735
+}
+.footer-brand{font-weight:900;letter-spacing:2px;color:white;font-size:17px}
+.footer-brand span{color:#ed1745}
+
+@media(max-width:600px){
+ header{padding:12px 4%}
+ .brand-name{font-size:16px}
+ .brand-mark{width:34px;height:34px}
+ nav{gap:10px}
+ nav a{font-size:12px}
+ nav button{padding:8px 10px;font-size:11px}
+ .hero{min-height:290px;padding:45px 5%}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .section{padding-left:4%;padding-right:4%}
+ .info{padding:9px}
+ .card button{padding:8px;font-size:10px}
+ .player{padding:13px}
+}
 </style>
 </head>
+
 <body>
 
 <header>
-<div class="logo">ORVEX MOVIES</div>
+<a class="brand" href="#home">
+ <span class="brand-mark"></span>
+ <span class="brand-name">ORVEX <span>MOVIES</span></span>
+</a>
+
 <nav>
 <a href="#home">Home</a>
 <a href="#movies">Movies</a>
 <a href="#series">Series</a>
-<a href="#watchlist">My Watchlist</a>
+<a href="#watchlist">Watchlist</a>
 <button id="accountButton" onclick="showAuth()">Login / Register</button>
 </nav>
 </header>
 
 <section class="hero" id="home">
-<small style="color:#e50935">YOUR ENTERTAINMENT WORLD</small>
-<h1>Unlimited Entertainment</h1>
-<p>Discover movies and TV series in one place. Enjoy entertainment with a simple, data-conscious experience.</p>
+<small>YOUR ENTERTAINMENT WORLD</small>
+<h1>Every Story.<br><span>One Destination.</span></h1>
+<p>Discover movies and TV series in one place. Enjoy entertainment with a simple, data-conscious viewing experience.</p>
 <button class="action" onclick="document.getElementById('movies').scrollIntoView()">Explore Movies</button>
 </section>
 
@@ -109,23 +248,39 @@ footer{text-align:center;background:#101522;padding:25px;color:#999;font-size:12
 
 <div id="player">
 <div class="player">
-<button id="close" onclick="closePlayer()">Close Player</button>
+<div class="player-top">
+ <div class="brand">
+  <span class="brand-mark"></span>
+  <span class="brand-name">ORVEX <span>MOVIES</span></span>
+ </div>
+ <button id="close" onclick="closePlayer()">Close Player</button>
+</div>
+
 <h2 id="playerTitle"></h2>
 <p id="playerDescription"></p>
+
 <video id="video" controls playsinline preload="none"></video>
-<p style="color:#aaa;font-size:12px;margin-top:10px">
-Playback quality depends on the authorized video source.
+
+<div class="player-controls">
+<label for="qualitySelect">Video quality:</label>
+<select id="qualitySelect" onchange="changeQuality()"></select>
+<a id="downloadButton" class="download" href="#" download>Download</a>
+</div>
+
+<p class="quality-note">
+Only available video qualities are shown. Playback and downloads depend on the authorized video source.
 </p>
 </div>
 </div>
 
 <footer>
-<p>ORVEX MOVIES</p>
+<p class="footer-brand">ORVEX <span>MOVIES</span></p>
 <p style="margin-top:8px">MOVIES • TV SERIES • ENTERTAINMENT</p>
 <p style="margin-top:10px">© 2026 ORVEX MOVIES</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 const SUPABASE_URL="https://dfoxaomvdsrylreiqaum.supabase.co";
 const SUPABASE_KEY="sb_publishable_oMRvFbAXw15r_RlBw_jSxQ_Z1QVEP4d";
@@ -136,6 +291,7 @@ let allTitles=[];
 let currentUser=null;
 let currentTitle=null;
 let lastProgressSave=0;
+let currentVideoURL="";
 
 function safeURL(value){
  try{
@@ -241,7 +397,7 @@ function makeCards(items,mode="normal"){
   const poster=safeURL(item.poster_url);
   const image=poster
    ? `<img src="${escapeHTML(poster)}" alt="" loading="lazy">`
-   : `<div style="aspect-ratio:2/3;background:#20283a;display:grid;place-items:center;color:#aaa">No poster</div>`;
+   : `<div class="no-poster">ORVEX MOVIES</div>`;
 
   let buttons="";
 
@@ -290,12 +446,23 @@ async function addWatchlist(titleId){
   return;
  }
 
+ const {data:existing}=await db.from("watchlist")
+  .select("id")
+  .eq("user_id",currentUser.id)
+  .eq("title_id",titleId)
+  .maybeSingle();
+
+ if(existing){
+  alert("This title is already in your watchlist.");
+  return;
+ }
+
  const {error}=await db.from("watchlist").insert({
   user_id:currentUser.id,
   title_id:titleId
  });
 
- if(error&&error.code!=="23505"){
+ if(error){
   alert("Could not add to watchlist: "+error.message);
   return;
  }
@@ -364,32 +531,84 @@ async function loadPersonalSections(){
  }
 }
 
+/* Build quality options from actual video URLs */
+function getVideoQualities(item){
+ const qualities=[];
+
+ const sources=[
+  {label:"240p",url:item.video_url_240p},
+  {label:"360p",url:item.video_url_360p},
+  {label:"480p",url:item.video_url_480p},
+  {label:"720p",url:item.video_url_720p||item.video_url}
+ ];
+
+ sources.forEach(source=>{
+  const url=safeURL(source.url);
+  if(url){
+   qualities.push({label:source.label,url});
+  }
+ });
+
+ return qualities;
+}
+
+function applyVideoSource(url,restoreTime=0,wasPlaying=false){
+ const video=document.getElementById("video");
+ const safe=safeURL(url);
+
+ if(!safe)return;
+
+ currentVideoURL=safe;
+ video.pause();
+ video.src=safe;
+ video.load();
+
+ video.addEventListener("loadedmetadata",function restore(){
+  if(restoreTime>0&&Number.isFinite(video.duration)){
+   video.currentTime=Math.min(restoreTime,video.duration);
+  }
+  if(wasPlaying){
+   video.play().catch(()=>{});
+  }
+ },{once:true});
+
+ document.getElementById("downloadButton").href=safe;
+}
+
 async function openTitle(id){
  const item=allTitles.find(x=>x.id===id);
  if(!item)return;
 
  currentTitle=item;
 
- document.getElementById("playerTitle").textContent=item.title;
- document.getElementById("playerDescription").textContent=item.description||"";
-
- const video=document.getElementById("video");
- video.pause();
- video.removeAttribute("src");
- video.load();
-
  if(item.content_type==="series"){
   alert("Series episode playback will be added in the next update.");
   return;
  }
 
- if(!item.video_url){
+ const qualities=getVideoQualities(item);
+
+ if(!qualities.length){
   alert("This title does not have a video link yet.");
   return;
  }
 
- video.src=safeURL(item.video_url);
+ document.getElementById("playerTitle").textContent=item.title;
+ document.getElementById("playerDescription").textContent=item.description||"";
+
+ const qualitySelect=document.getElementById("qualitySelect");
+ qualitySelect.innerHTML=qualities.map(q=>
+  `<option value="${escapeHTML(q.label)}">${escapeHTML(q.label)}</option>`
+ ).join("");
+
+ /* Prefer the lowest available quality to save data */
+ const selected=qualities[0];
+ qualitySelect.value=selected.label;
+
  document.getElementById("player").style.display="block";
+ lastProgressSave=0;
+
+ applyVideoSource(selected.url);
 
  if(currentUser){
   const {data}=await db.from("watch_progress")
@@ -399,11 +618,30 @@ async function openTitle(id){
    .maybeSingle();
 
   if(data&&data.position_seconds>0){
+   const video=document.getElementById("video");
    video.addEventListener("loadedmetadata",function restore(){
-    video.currentTime=Math.min(data.position_seconds,video.duration||data.position_seconds);
+    if(Number.isFinite(video.duration)){
+     video.currentTime=Math.min(data.position_seconds,video.duration);
+    }
    },{once:true});
   }
  }
+}
+
+function changeQuality(){
+ if(!currentTitle)return;
+
+ const qualities=getVideoQualities(currentTitle);
+ const selectedLabel=document.getElementById("qualitySelect").value;
+ const selected=qualities.find(q=>q.label===selectedLabel);
+
+ if(!selected)return;
+
+ const video=document.getElementById("video");
+ const position=video.currentTime||0;
+ const wasPlaying=!video.paused;
+
+ applyVideoSource(selected.url,position,wasPlaying);
 }
 
 async function saveProgress(){
@@ -438,7 +676,9 @@ async function closePlayer(){
  video.removeAttribute("src");
  video.load();
  document.getElementById("player").style.display="none";
+ document.getElementById("downloadButton").removeAttribute("href");
  currentTitle=null;
+ currentVideoURL="";
  await loadPersonalSections();
 }
 

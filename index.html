@@ -328,6 +328,9 @@ footer{
 <p id="playerDescription"></p>
 
 <video id="video" controls playsinline preload="none"></video>
+ <button id="subtitleToggle" onclick="toggleSubtitles()" style="display:none;margin-top:10px;">
+  Subtitles: OFF
+ </button>
 <iframe id="youtubeFrame"
  title="YouTube episode player"
  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -609,6 +612,26 @@ function showMP4Player(url,restoreTime=0,wasPlaying=false){
  currentVideoURL=safe;
  video.pause();
  video.src=safe;
+ video.querySelectorAll("track").forEach(track=>track.remove());
+
+const subtitleURL=safeURL(
+ currentEpisode?.subtitle_url || currentTitle?.subtitle_url
+);
+
+const subtitleButton=document.getElementById("subtitleToggle");
+
+if(subtitleURL){
+ const track=document.createElement("track");
+ track.kind="subtitles";
+ track.label="English";
+ track.srclang="en";
+ track.src=subtitleURL;
+ video.appendChild(track);
+ subtitleButton.style.display="inline-block";
+ subtitleButton.textContent="Subtitles: OFF";
+}else{
+ subtitleButton.style.display="none";
+ }
  video.load();
 
  document.getElementById("rewindButton").style.display="inline-block";
@@ -623,11 +646,28 @@ function showMP4Player(url,restoreTime=0,wasPlaying=false){
   if(wasPlaying)video.play().catch(()=>{});
  },{once:true});
 }
+function toggleSubtitles(){
+ const video=document.getElementById("video");
+ const tracks=video.textTracks;
+ const button=document.getElementById("subtitleToggle");
 
+ if(!tracks.length)return;
+
+ const track=tracks[0];
+
+ if(track.mode==="showing"){
+  track.mode="disabled";
+  button.textContent="Subtitles: OFF";
+ }else{
+  track.mode="showing";
+  button.textContent="Subtitles: ON";
+ }
+ }
 function showYouTubePlayer(id){
  const video=document.getElementById("video");
  const frame=document.getElementById("youtubeFrame");
  video.pause();
+ document.getElementById("subtitleToggle").style.display="none";
  video.removeAttribute("src");
  video.load();
  video.style.display="none";
@@ -863,6 +903,8 @@ async function saveProgress(){
  const video=document.getElementById("video");
  await saveProgress();
  video.pause();
+  document.getElementById("subtitleToggle").style.display="none";
+document.getElementById("subtitleToggle").textContent="Subtitles: OFF";
  video.removeAttribute("src");
  video.load();
  video.style.display="block";

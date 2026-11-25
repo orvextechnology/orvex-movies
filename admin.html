@@ -5,108 +5,136 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080b12">
-<title>ORVEX MOVIES | Admin</title>
+<title>ORVEX MOVIES Admin</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080b12;color:white;font-family:Arial,sans-serif}
-header{background:#101522;padding:18px 5%;display:flex;justify-content:space-between;align-items:center}
-.logo{color:#e50935;font-size:20px;font-weight:bold}
-main{max-width:750px;margin:25px auto;padding:15px}
-.panel{background:#151c2a;padding:20px;border-radius:10px;margin-bottom:20px}
-h2{font-size:19px;margin:0 0 18px}
-h3{font-size:16px;margin:0 0 15px;color:#e50935}
-input,select,textarea{width:100%;padding:13px;margin:7px 0 14px;background:#080f1c;color:white;border:1px solid #303b50;border-radius:6px;font-size:14px}
+body{margin:0;background:#080b12;color:white;font-family:Arial,sans-serif;padding:18px}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.logo{color:#e50935;font-size:22px;font-weight:bold}
+main{max-width:850px;margin:25px auto}
+.panel{background:#151c2a;padding:18px;border-radius:9px;margin-bottom:20px}
+h2{font-size:19px;margin:0 0 15px}
+h3{font-size:16px}
+label{display:block;margin:13px 0 6px;color:#ccc;font-size:13px}
+input,textarea,select{width:100%;padding:12px;background:#080f1c;color:white;border:1px solid #30394b;border-radius:6px}
 textarea{min-height:90px;resize:vertical}
-label{font-size:13px;color:#bbb}
-button{padding:13px 18px;background:#e50935;color:white;border:0;border-radius:6px;font-weight:bold;cursor:pointer}
+button{border:0;padding:11px 14px;border-radius:5px;background:#e50935;color:white;margin:10px 5px 0 0;cursor:pointer}
+button.secondary{background:#30394b}
+button.green{background:#16834b}
+button.orange{background:#a96513}
+button.danger{background:#a52838}
 button:disabled{opacity:.5}
-.secondary{background:#333;margin-left:8px}
-.message{font-size:13px;color:#bbb;line-height:1.5;margin-top:12px}
-.hidden{display:none}
-hr{border:0;border-top:1px solid #303b50;margin:20px 0}
-.item{background:#080f1c;padding:12px;border-radius:6px;margin:10px 0;font-size:13px;line-height:1.6}
-.item strong{color:white}
-.small{font-size:12px;color:#aaa}
+.hidden{display:none!important}
+.item{background:#202a3b;padding:14px;border-radius:7px;margin:12px 0}
+.item p{font-size:13px;color:#bbb;line-height:1.5}
+.status{font-size:12px;color:#f0bd65}
+.message{font-size:13px;color:#bbb;line-height:1.5;white-space:pre-wrap}
+.actions{display:flex;flex-wrap:wrap;gap:5px}
 </style>
 </head>
 <body>
+
 <header>
 <div class="logo">ORVEX MOVIES</div>
 <div>ADMIN PANEL</div>
 </header>
+
 <main>
-<section class="panel" id="loginPanel">
+<section id="loginPanel" class="panel">
 <h2>Administrator Login</h2>
 <label>Email address</label>
 <input type="email" id="email" placeholder="Admin email">
 <label>Password</label>
-<input type="password" id="password" placeholder="Admin password">
-<button id="loginButton" onclick="login()">Login</button>
-<p class="message" id="loginMessage"></p>
+<input type="password" id="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<p id="loginMessage" class="message"></p>
 </section>
 
-<section id="dashboard" class="hidden">
-<div class="panel">
+<div id="dashboard" class="hidden">
+<section class="panel">
 <h2>Welcome, Administrator</h2>
 <p class="message">Manage movies, TV series and episodes here.</p>
-<button onclick="logout()" class="secondary">Logout</button>
-</div>
+<button class="secondary" onclick="logout()">Logout</button>
+</section>
 
-<div class="panel">
-<h3>Add Movie or TV Series</h3>
+<section class="panel">
+<h2 id="formHeading">Add Movie or TV Series</h2>
+
 <label>Content type</label>
 <select id="contentType" onchange="updateForm()">
 <option value="movie">Movie</option>
 <option value="series">TV Series</option>
 </select>
+
 <label>Title</label>
 <input id="title" placeholder="Enter movie or series title">
+
 <label>Description</label>
 <textarea id="description" placeholder="Write a short description"></textarea>
+
 <label>Poster image URL (optional for drafts)</label>
-<input id="poster" type="url" placeholder="https://example.com/poster.jpg">
+<input id="poster" placeholder="https://example.com/poster.jpg">
+
 <label>Backdrop image URL (optional)</label>
-<input id="backdrop" type="url" placeholder="https://example.com/backdrop.jpg">
+<input id="backdrop" placeholder="https://example.com/backdrop.jpg">
+
 <label>Release year</label>
 <input id="year" type="number" placeholder="2026">
-<div id="movieFields">
+
+<div id="movieVideoField">
 <label>Authorized direct video URL (optional for drafts)</label>
-<input id="video" type="url" placeholder="https://example.com/movie.mp4">
-<p class="small">Only use video links you own or have permission to stream.</p>
+<input id="video" placeholder="https://example.com/movie.mp4">
 </div>
+
 <label>Publishing status</label>
 <select id="status">
 <option value="draft">Save as draft</option>
-<option value="published">Publish for viewers</option>
+<option value="published">Publish</option>
 </select>
-<button id="saveButton" onclick="saveTitle()">Save Content</button>
-<p class="message" id="saveMessage"></p>
-</div>
 
-<div class="panel" id="episodePanel">
-<h3>Add Episode to a Series</h3>
+<p class="message">Only publish movies and videos you own or have permission to distribute. A video link must be compatible with browser playback.</p>
+
+<button onclick="saveContent()" id="saveButton">Save Content</button>
+<button class="secondary hidden" id="cancelEdit" onclick="cancelEditing()">Cancel Edit</button>
+<p id="formMessage" class="message"></p>
+</section>
+
+<section class="panel hidden" id="episodePanel">
+<h2>Add Episode to a Series</h2>
+
 <label>Select series</label>
-<select id="seriesSelect"><option value="">Loading series...</option></select>
+<select id="episodeSeries"></select>
+
 <label>Season number</label>
-<input type="number" id="season" min="1" placeholder="1">
+<input id="season" type="number" min="1" value="1">
+
 <label>Episode number</label>
-<input type="number" id="episode" min="1" placeholder="1">
+<input id="episodeNumber" type="number" min="1" value="1">
+
 <label>Episode title</label>
 <input id="episodeTitle" placeholder="Episode title">
+
 <label>Episode description</label>
 <textarea id="episodeDescription" placeholder="Episode description"></textarea>
-<label>Authorized episode video URL</label>
-<input type="url" id="episodeVideo" placeholder="https://example.com/episode.mp4">
-<button id="episodeButton" onclick="saveEpisode()">Save Episode</button>
-<p class="message" id="episodeMessage"></p>
-</div>
 
-<div class="panel">
-<h3>Your Content</h3>
-<button onclick="loadAdminTitles()">Refresh Content</button>
-<div id="contentList" class="message">Loading...</div>
-</div>
+<label>Authorized episode video URL</label>
+<input id="episodeVideo" placeholder="https://example.com/episode.mp4">
+
+<button onclick="saveEpisode()">Save Episode</button>
+<p id="episodeMessage" class="message"></p>
 </section>
+
+<section class="panel">
+<h2>Your Content</h2>
+<button class="secondary" onclick="loadContent()">Refresh Content</button>
+<div id="contentList"><p class="message">Loading content...</p></div>
+</section>
+
+<section class="panel">
+<h2>Episodes</h2>
+<div id="episodeList"><p class="message">Loading episodes...</p></div>
+</section>
+</div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -116,256 +144,343 @@ const SUPABASE_KEY="sb_publishable_oMRvFbAXw15r_RlBw_jSxQ_Z1QVEP4d";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let currentUser=null;
+let editingId=null;
+let titles=[];
 
-function message(id,text){
- document.getElementById(id).textContent=text;
-}
+function el(id){return document.getElementById(id)}
+function msg(id,text){el(id).textContent=text}
 
-function validURL(value){
- if(!value)return true;
- try{
-  const url=new URL(value);
-  return url.protocol==="https:"||url.protocol==="http:";
- }catch{return false;}
-}
-
-function updateForm(){
- const type=document.getElementById("contentType").value;
- document.getElementById("movieFields").classList.toggle("hidden",type==="series");
- document.getElementById("episodePanel").classList.toggle("hidden",type==="movie");
+function escapeHTML(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
 }
 
 async function login(){
- const email=document.getElementById("email").value.trim();
- const password=document.getElementById("password").value;
- const button=document.getElementById("loginButton");
+ const email=el("email").value.trim();
+ const password=el("password").value;
+ msg("loginMessage","Logging in...");
 
- if(!email||!password){
-  message("loginMessage","Enter your email and password.");
+ const {data,error}=await db.auth.signInWithPassword({email,password});
+ if(error){msg("loginMessage",error.message);return;}
+
+ await checkAdmin(data.user);
+}
+
+async function checkAdmin(user){
+ if(!user){
+  el("loginPanel").classList.remove("hidden");
+  el("dashboard").classList.add("hidden");
   return;
  }
 
- button.disabled=true;
- message("loginMessage","Checking login...");
+ const {data,error}=await db.from("user_roles")
+  .select("role")
+  .eq("user_id",user.id)
+  .maybeSingle();
 
- try{
-  const {data,error}=await db.auth.signInWithPassword({email,password});
-  if(error)throw error;
-
-  currentUser=data.user;
-
-  const {data:roleData,error:roleError}=await db
-   .from("user_roles").select("role")
-   .eq("user_id",currentUser.id).single();
-
-  if(roleError||roleData.role!=="admin"){
-   await db.auth.signOut();
-   currentUser=null;
-   throw new Error("This account does not have administrator access.");
-  }
-
-  document.getElementById("loginPanel").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-  await loadAdminTitles();
-
- }catch(error){
-  message("loginMessage",error.message);
- }finally{
-  button.disabled=false;
+ if(error||!data||data.role!=="admin"){
+  await db.auth.signOut();
+  msg("loginMessage","This account does not have administrator access.");
+  return;
  }
+
+ currentUser=user;
+ el("loginPanel").classList.add("hidden");
+ el("dashboard").classList.remove("hidden");
+
+ await loadContent();
+ await loadEpisodes();
 }
 
 async function logout(){
  await db.auth.signOut();
  currentUser=null;
- document.getElementById("dashboard").classList.add("hidden");
- document.getElementById("loginPanel").classList.remove("hidden");
- message("loginMessage","You have logged out.");
+ el("dashboard").classList.add("hidden");
+ el("loginPanel").classList.remove("hidden");
 }
 
-async function saveTitle(){
- const type=document.getElementById("contentType").value;
- const title=document.getElementById("title").value.trim();
- const description=document.getElementById("description").value.trim();
- const poster=document.getElementById("poster").value.trim();
- const backdrop=document.getElementById("backdrop").value.trim();
- const yearValue=document.getElementById("year").value;
- const status=document.getElementById("status").value;
- const video=document.getElementById("video").value.trim();
- const button=document.getElementById("saveButton");
+function updateForm(){
+ const type=el("contentType").value;
+ el("movieVideoField").classList.toggle("hidden",type==="series");
+}
+
+function clearForm(){
+ editingId=null;
+ el("formHeading").textContent="Add Movie or TV Series";
+ el("saveButton").textContent="Save Content";
+ el("cancelEdit").classList.add("hidden");
+ el("contentType").disabled=false;
+
+ ["title","description","poster","backdrop","year","video"].forEach(id=>{
+  el(id).value="";
+ });
+
+ el("contentType").value="movie";
+ el("status").value="draft";
+ updateForm();
+}
+
+function cancelEditing(){
+ clearForm();
+ msg("formMessage","Editing cancelled.");
+}
+
+async function saveContent(){
+ const title=el("title").value.trim();
+ const type=el("contentType").value;
 
  if(!title){
-  message("saveMessage","Please enter a title.");
+  msg("formMessage","Please enter a title.");
   return;
  }
 
- if(!validURL(poster)||!validURL(backdrop)||!validURL(video)){
-  message("saveMessage","Check your image and video URLs.");
+ const record={
+  title,
+  content_type:type,
+  description:el("description").value.trim(),
+  poster_url:el("poster").value.trim(),
+  backdrop_url:el("backdrop").value.trim(),
+  release_year:el("year").value?Number(el("year").value):null,
+  video_url:type==="movie"?el("video").value.trim():null,
+  status:el("status").value
+ };
+
+ msg("formMessage","Saving content...");
+ el("saveButton").disabled=true;
+
+ let result;
+
+ if(editingId){
+  result=await db.from("titles").update(record).eq("id",editingId);
+ }else{
+  result=await db.from("titles").insert(record);
+ }
+
+ el("saveButton").disabled=false;
+
+ if(result.error){
+  msg("formMessage","Error: "+result.error.message);
   return;
  }
 
- if(status==="published"){
-  if(!poster){
-   message("saveMessage","Add a poster before publishing.");
-   return;
-  }
-  if(type==="movie"&&!video){
-   message("saveMessage","Add an authorized video URL before publishing a movie.");
+ msg("formMessage",editingId?"Content updated successfully!":"Content saved successfully!");
+ clearForm();
+ await loadContent();
+}
+
+async function loadContent(){
+ const {data,error}=await db.from("titles")
+  .select("*")
+  .order("created_at",{ascending:false});
+
+ if(error){
+  el("contentList").innerHTML='<p class="message">Could not load content: '+escapeHTML(error.message)+'</p>';
+  return;
+ }
+
+ titles=data||[];
+
+ if(!titles.length){
+  el("contentList").innerHTML='<p class="message">No content has been added yet.</p>';
+  return;
+ }
+
+ el("contentList").innerHTML=titles.map(item=>`
+  <div class="item">
+   <h3>${escapeHTML(item.title)}</h3>
+   <p>${escapeHTML(item.content_type)} • ${escapeHTML(item.release_year||"Year not set")}</p>
+   <p class="status">Status: ${escapeHTML(item.status)}</p>
+   <div class="actions">
+    <button onclick="editTitle('${item.id}')">Edit</button>
+    <button class="${item.status==="published"?"orange":"green"}"
+     onclick="togglePublish('${item.id}','${item.status}')">
+     ${item.status==="published"?"Unpublish":"Publish"}
+    </button>
+    <button class="danger" onclick="deleteTitle('${item.id}')">Delete</button>
+   </div>
+  </div>
+ `).join("");
+
+ updateSeriesOptions();
+}
+
+function editTitle(id){
+ const item=titles.find(x=>x.id===id);
+ if(!item)return;
+
+ editingId=id;
+ el("formHeading").textContent="Edit Content";
+ el("saveButton").textContent="Update Content";
+ el("cancelEdit").classList.remove("hidden");
+
+ el("contentType").value=item.content_type;
+ el("contentType").disabled=true;
+ el("title").value=item.title||"";
+ el("description").value=item.description||"";
+ el("poster").value=item.poster_url||"";
+ el("backdrop").value=item.backdrop_url||"";
+ el("year").value=item.release_year||"";
+ el("video").value=item.video_url||"";
+ el("status").value=item.status||"draft";
+
+ updateForm();
+ el("formHeading").scrollIntoView({behavior:"smooth"});
+}
+
+async function togglePublish(id,currentStatus){
+ const nextStatus=currentStatus==="published"?"draft":"published";
+ const action=nextStatus==="published"?"publish":"unpublish";
+
+ if(!confirm("Are you sure you want to "+action+" this content?"))return;
+
+ const {error}=await db.from("titles")
+  .update({status:nextStatus})
+  .eq("id",id);
+
+ if(error){
+  alert("Could not update status: "+error.message);
+  return;
+ }
+
+ alert("Content status updated.");
+ await loadContent();
+}
+
+async function deleteTitle(id){
+ const item=titles.find(x=>x.id===id);
+ if(!item)return;
+
+ if(!confirm("Permanently delete "+item.title+" and its episodes? This cannot be undone."))return;
+
+ if(item.content_type==="series"){
+  const {error:episodeError}=await db.from("episodes")
+   .delete().eq("series_id",id);
+
+  if(episodeError){
+   alert("Could not delete its episodes: "+episodeError.message);
    return;
   }
  }
 
- button.disabled=true;
- message("saveMessage","Saving content...");
+ const {error}=await db.from("titles").delete().eq("id",id);
 
- try{
-  const record={
-   title:title,
-   content_type:type,
-   description:description,
-   poster_url:poster||null,
-   backdrop_url:backdrop||null,
-   release_year:yearValue?Number(yearValue):null,
-   status:status,
-   video_url:type==="movie"?(video||null):null
-  };
-
-  const {error}=await db.from("titles").insert(record);
-  if(error)throw error;
-
-  message("saveMessage","Success! Content saved.");
-
-  document.getElementById("title").value="";
-  document.getElementById("description").value="";
-  document.getElementById("poster").value="";
-  document.getElementById("backdrop").value="";
-  document.getElementById("year").value="";
-  document.getElementById("video").value="";
-
-  await loadAdminTitles();
-
- }catch(error){
-  message("saveMessage","Error: "+error.message);
- }finally{
-  button.disabled=false;
+ if(error){
+  alert("Could not delete content: "+error.message);
+  return;
  }
+
+ if(editingId===id)clearForm();
+
+ alert("Content deleted.");
+ await loadContent();
+ await loadEpisodes();
+}
+
+function updateSeriesOptions(){
+ const series=titles.filter(x=>x.content_type==="series");
+ const select=el("episodeSeries");
+
+ select.innerHTML=series.length
+  ?series.map(x=>`<option value="${x.id}">${escapeHTML(x.title)}</option>`).join("")
+  :'<option value="">No series available</option>';
+
+ el("episodePanel").classList.toggle("hidden",series.length===0);
 }
 
 async function saveEpisode(){
- const seriesId=document.getElementById("seriesSelect").value;
- const season=Number(document.getElementById("season").value);
- const episode=Number(document.getElementById("episode").value);
- const title=document.getElementById("episodeTitle").value.trim();
- const description=document.getElementById("episodeDescription").value.trim();
- const video=document.getElementById("episodeVideo").value.trim();
- const button=document.getElementById("episodeButton");
-
- if(!seriesId||!season||!episode||!title||!video){
-  message("episodeMessage","Complete all episode fields.");
+ const seriesId=el("episodeSeries").value;
+ if(!seriesId){
+  msg("episodeMessage","Please add a series first.");
   return;
  }
 
- if(!validURL(video)){
-  message("episodeMessage","Enter a valid video URL.");
+ const record={
+  series_id:seriesId,
+  season_number:Number(el("season").value),
+  episode_number:Number(el("episodeNumber").value),
+  title:el("episodeTitle").value.trim(),
+  description:el("episodeDescription").value.trim(),
+  video_url:el("episodeVideo").value.trim()
+ };
+
+ if(!record.title||!record.video_url){
+  msg("episodeMessage","Enter an episode title and an authorized video URL.");
   return;
  }
 
- button.disabled=true;
- message("episodeMessage","Saving episode...");
+ msg("episodeMessage","Saving episode...");
 
- try{
-  const {error}=await db.from("episodes").insert({
-   series_id:seriesId,
-   season_number:season,
-   episode_number:episode,
-   title:title,
-   description:description,
-   video_url:video
-  });
+ const {error}=await db.from("episodes").insert(record);
 
-  if(error)throw error;
-
-  message("episodeMessage","Episode saved successfully.");
-  document.getElementById("season").value="";
-  document.getElementById("episode").value="";
-  document.getElementById("episodeTitle").value="";
-  document.getElementById("episodeDescription").value="";
-  document.getElementById("episodeVideo").value="";
-
- }catch(error){
-  message("episodeMessage","Error: "+error.message);
- }finally{
-  button.disabled=false;
+ if(error){
+  msg("episodeMessage","Error: "+error.message);
+  return;
  }
+
+ msg("episodeMessage","Episode saved successfully!");
+
+ el("episodeTitle").value="";
+ el("episodeDescription").value="";
+ el("episodeVideo").value="";
+
+ await loadEpisodes();
 }
 
-async function loadAdminTitles(){
- const list=document.getElementById("contentList");
- const select=document.getElementById("seriesSelect");
- list.textContent="Loading content...";
- select.innerHTML='<option value="">Loading series...</option>';
+async function loadEpisodes(){
+ const {data,error}=await db.from("episodes")
+  .select("id,series_id,season_number,episode_number,title,video_url,titles(title)")
+  .order("season_number")
+  .order("episode_number");
 
- try{
-  const {data,error}=await db.from("titles")
-   .select("id,title,content_type,status")
-   .order("created_at",{ascending:false});
-
-  if(error)throw error;
-
-  const series=(data||[]).filter(item=>item.content_type==="series");
-  select.innerHTML='<option value="">Choose a series</option>';
-
-  series.forEach(item=>{
-   const option=document.createElement("option");
-   option.value=item.id;
-   option.textContent=item.title;
-   select.appendChild(option);
-  });
-
-  list.innerHTML="";
-
-  if(!data||!data.length){
-   list.textContent="No content added yet.";
-   return;
-  }
-
-  data.forEach(item=>{
-   const div=document.createElement("div");
-   div.className="item";
-   const name=document.createElement("strong");
-   name.textContent=item.title;
-   const details=document.createElement("div");
-   details.textContent=item.content_type+" • "+item.status;
-   div.appendChild(name);
-   div.appendChild(details);
-   list.appendChild(div);
-  });
-
- }catch(error){
-  list.textContent="Unable to load content: "+error.message;
-  select.innerHTML='<option value="">Could not load series</option>';
+ if(error){
+  el("episodeList").innerHTML='<p class="message">Could not load episodes: '+escapeHTML(error.message)+'</p>';
+  return;
  }
+
+ if(!data||!data.length){
+  el("episodeList").innerHTML='<p class="message">No episodes added yet.</p>';
+  return;
+ }
+
+ el("episodeList").innerHTML=data.map(ep=>`
+  <div class="item">
+   <h3>${escapeHTML(ep.title)}</h3>
+   <p>Series: ${escapeHTML(ep.titles?.title||"Unknown")}</p>
+   <p>Season ${ep.season_number} • Episode ${ep.episode_number}</p>
+   <button class="danger" onclick="deleteEpisode('${ep.id}')">Delete Episode</button>
+  </div>
+ `).join("");
 }
 
-async function checkExistingSession(){
+async function deleteEpisode(id){
+ if(!confirm("Delete this episode?"))return;
+
+ const {error}=await db.from("episodes").delete().eq("id",id);
+
+ if(error){
+  alert("Could not delete episode: "+error.message);
+  return;
+ }
+
+ await loadEpisodes();
+}
+
+async function start(){
  const {data}=await db.auth.getSession();
- if(!data.session)return;
-
- currentUser=data.session.user;
- const {data:roleData,error}=await db.from("user_roles")
-  .select("role").eq("user_id",currentUser.id).single();
-
- if(!error&&roleData&&roleData.role==="admin"){
-  document.getElementById("loginPanel").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
-  await loadAdminTitles();
- }else{
-  await db.auth.signOut();
- }
+ await checkAdmin(data.session?.user||null);
 }
 
-updateForm();
-checkExistingSession();
+db.auth.onAuthStateChange((event,session)=>{
+ if(event==="SIGNED_OUT"){
+  currentUser=null;
+  el("dashboard").classList.add("hidden");
+  el("loginPanel").classList.remove("hidden");
+ }
+});
+
+start();
 </script>
 </body>
-</html>
+ </html>
+ 

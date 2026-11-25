@@ -5,255 +5,223 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080b12">
-<meta name="description" content="ORVEX MOVIES - Free movies and TV series.">
 <title>ORVEX MOVIES</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: #080b12;
-  color: white;
-  font-family: Arial, sans-serif;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 5%;
-  background: #101522;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.logo {
-  font-size: 22px;
-  font-weight: bold;
-  color: #e50935;
-  letter-spacing: 1px;
-}
-
-nav {
-  display: flex;
-  gap: 18px;
-}
-
-nav a {
-  color: white;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-nav a:hover {
-  color: #e50935;
-}
-
-.hero {
-  min-height: 350px;
-  padding: 65px 6%;
-  display: flex;
-  align-items: center;
-  background:
-    linear-gradient(90deg, #080b12 10%, rgba(8,11,18,.7)),
-    linear-gradient(0deg, #080b12, transparent),
-    url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1000&q=65");
-  background-size: cover;
-  background-position: center;
-}
-
-.hero-content {
-  max-width: 550px;
-}
-
-.hero small {
-  color: #e50935;
-  font-weight: bold;
-  letter-spacing: 2px;
-}
-
-.hero h1 {
-  font-size: 42px;
-  margin: 15px 0;
-}
-
-.hero p {
-  color: #c5c8d0;
-  line-height: 1.6;
-  font-size: 14px;
-}
-
-.hero button {
-  background: #e50935;
-  color: white;
-  border: none;
-  padding: 13px 25px;
-  margin-top: 22px;
-  border-radius: 5px;
-  font-weight: bold;
-}
-
-.search-area {
-  padding: 22px 5%;
-}
-
-.search-area input {
-  width: 100%;
-  padding: 14px;
-  background: #151c2a;
-  border: 1px solid #293247;
-  color: white;
-  border-radius: 6px;
-  outline: none;
-}
-
-.section {
-  padding: 15px 5% 30px;
-}
-
-.section h2 {
-  font-size: 21px;
-  margin-bottom: 20px;
-  border-left: 4px solid #e50935;
-  padding-left: 10px;
-}
-
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 13px;
-}
-
-.movie-card {
-  background: #131a27;
-  border-radius: 7px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: .2s;
-}
-
-.movie-card:hover {
-  transform: translateY(-4px);
-}
-
-.movie-card img {
-  width: 100%;
-  aspect-ratio: 2/3;
-  object-fit: cover;
-  display: block;
-  background: #20283a;
-}
-
-.movie-info {
-  padding: 10px;
-}
-
-.movie-info h3 {
-  font-size: 13px;
-  margin-bottom: 6px;
-}
-
-.movie-info p {
-  color: #929aaa;
-  font-size: 11px;
-}
-
-.empty {
-  color: #929aaa;
-  font-size: 14px;
-  padding: 15px 0;
-  grid-column: 1/-1;
-}
-
-footer {
-  text-align: center;
-  background: #101522;
-  color: #8d96a8;
-  padding: 25px;
-  margin-top: 25px;
-  font-size: 12px;
-}
-
-@media(max-width: 380px) {
-  .movie-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .hero h1 {
-    font-size: 32px;
-  }
-}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080b12;color:white;font-family:Arial,sans-serif}
+header{background:#101522;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+.logo{color:#e50935;font-size:21px;font-weight:bold}
+nav{display:flex;gap:14px}
+nav a{color:white;text-decoration:none;font-size:13px}
+.hero{padding:65px 6%;min-height:300px;background:linear-gradient(90deg,#080b12,#080b12aa),url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&q=45');background-size:cover;background-position:center}
+.hero h1{font-size:36px;margin:18px 0}
+.hero p{color:#bbb;line-height:1.6;max-width:450px}
+.hero button,.player button{background:#e50935;color:white;border:0;padding:12px 20px;border-radius:5px;margin-top:20px}
+.search{padding:20px 5%}
+.search input{width:100%;padding:14px;background:#151c2a;color:white;border:1px solid #293247;border-radius:6px}
+.section{padding:15px 5% 30px}
+.section h2{font-size:20px;border-left:4px solid #e50935;padding-left:10px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{background:#151c2a;border-radius:7px;overflow:hidden;cursor:pointer}
+.card img{width:100%;aspect-ratio:2/3;object-fit:cover;background:#20283a;display:block}
+.info{padding:9px}
+.info h3{font-size:13px;margin-bottom:5px}
+.info p{font-size:11px;color:#aaa}
+.message{color:#aaa;font-size:13px;line-height:1.6;grid-column:1/-1}
+#player{display:none;position:fixed;inset:0;background:#000e;z-index:20;overflow:auto;padding:20px}
+.player{max-width:700px;margin:30px auto;background:#141b29;padding:18px;border-radius:8px}
+.player video{width:100%;background:black;margin-top:15px}
+.player h2{margin:12px 0}
+#close{background:#444;margin-bottom:12px}
+footer{text-align:center;background:#101522;padding:25px;color:#999;font-size:12px}
+@media(max-width:380px){.grid{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:30px}}
 </style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">ORVEX MOVIES</div>
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#movies">Movies</a>
-    <a href="#series">Series</a>
-  </nav>
+<div class="logo">ORVEX MOVIES</div>
+<nav>
+<a href="#home">Home</a>
+<a href="#movies">Movies</a>
+<a href="#series">Series</a>
+</nav>
 </header>
 
 <section class="hero" id="home">
-  <div class="hero-content">
-    <small>WELCOME TO ORVEX</small>
-    <h1>Unlimited Entertainment</h1>
-    <p>
-      Discover movies and television series in one place.
-      Your entertainment starts here.
-    </p>
-    <button onclick="document.getElementById('movies').scrollIntoView({behavior:'smooth'})">
-      Explore Movies
-    </button>
-  </div>
+<small style="color:#e50935">YOUR ENTERTAINMENT WORLD</small>
+<h1>Unlimited Entertainment</h1>
+<p>Discover movies and TV series in one place. Enjoy entertainment with a simple, data-conscious experience.</p>
+<button onclick="document.getElementById('movies').scrollIntoView()">Explore Movies</button>
 </section>
 
-<div class="search-area">
-  <input
-    type="search"
-    id="search"
-    placeholder="Search movies and series..."
-    oninput="searchMovies()"
-  >
+<div class="search">
+<input id="search" type="search" placeholder="Search movies and series..." oninput="filterMovies()">
 </div>
 
 <section class="section" id="movies">
-  <h2>Latest Movies</h2>
-  <div class="movie-grid" id="movieGrid">
-    <p class="empty">Movies will appear here when added by the administrator.</p>
-  </div>
+<h2>Latest Movies</h2>
+<div class="grid" id="movieGrid">
+<p class="message">Loading movies...</p>
+</div>
 </section>
 
 <section class="section" id="series">
-  <h2>TV Series</h2>
-  <div class="movie-grid" id="seriesGrid">
-    <p class="empty">TV series will appear here when added by the administrator.</p>
-  </div>
+<h2>TV Series</h2>
+<div class="grid" id="seriesGrid">
+<p class="message">Loading series...</p>
+</div>
 </section>
 
+<div id="player">
+<div class="player">
+<button id="close" onclick="closePlayer()">Close Player</button>
+<h2 id="playerTitle"></h2>
+<p id="playerDescription"></p>
+<video id="video" controls playsinline preload="none"></video>
+<p style="color:#aaa;font-size:12px;margin-top:10px">Video quality depends on the authorized video source.</p>
+</div>
+</div>
+
 <footer>
-  <p>ORVEX MOVIES</p>
-  <p>Movies • TV Series • Entertainment</p>
-  <p style="margin-top:10px">© 2026 ORVEX MOVIES. All rights reserved.</p>
+<p>ORVEX MOVIES</p>
+<p style="margin-top:8px">MOVIES • TV SERIES • ENTERTAINMENT</p>
+<p style="margin-top:10px">© 2026 ORVEX MOVIES</p>
 </footer>
 
-<script>
-function searchMovies() {
-  const query = document.getElementById("search").value.toLowerCase();
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  document.querySelectorAll(".movie-card").forEach(card => {
-    const title = card.innerText.toLowerCase();
-    card.style.display = title.includes(query) ? "" : "none";
-  });
+<script>
+const SUPABASE_URL = "https://dfoxaomvdsrylreiqaum.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_oMRvFbAXw15r_RlBw_jSxQ_Z1QVEP4d";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let allTitles = [];
+
+async function loadTitles() {
+  const movieGrid = document.getElementById("movieGrid");
+  const seriesGrid = document.getElementById("seriesGrid");
+
+  try {
+    const {data,error} = await db
+      .from("titles")
+      .select("*")
+      .eq("status","published")
+      .order("created_at",{ascending:false});
+
+    if(error) throw error;
+
+    allTitles = data || [];
+
+    renderTitles();
+
+  } catch(error) {
+    console.error(error);
+    movieGrid.innerHTML =
+      '<p class="message">Unable to load movies. Please try again later.</p>';
+
+    seriesGrid.innerHTML =
+      '<p class="message">Unable to load TV series.</p>';
+  }
 }
+
+function renderTitles(query="") {
+  const movies = allTitles.filter(item =>
+    item.content_type === "movie" &&
+    item.title.toLowerCase().includes(query)
+  );
+
+  const series = allTitles.filter(item =>
+    item.content_type === "series" &&
+    item.title.toLowerCase().includes(query)
+  );
+
+  document.getElementById("movieGrid").innerHTML =
+    makeCards(movies);
+
+  document.getElementById("seriesGrid").innerHTML =
+    makeCards(series);
+}
+
+function makeCards(items) {
+  if(!items.length) {
+    return '<p class="message">No titles available yet.</p>';
+  }
+
+  return items.map(item => `
+    <div class="card" onclick="openTitle('${item.id}')">
+      <img
+        src="${safeURL(item.poster_url)}"
+        alt=""
+        loading="lazy"
+        onerror="this.style.visibility='hidden'"
+      >
+      <div class="info">
+        <h3>${escapeHTML(item.title)}</h3>
+        <p>${item.release_year || ""} • ${item.content_type === "movie" ? "Movie" : "Series"}</p>
+      </div>
+    </div>
+  `).join("");
+}
+
+function filterMovies() {
+  const query = document.getElementById("search")
+    .value.toLowerCase().trim();
+
+  renderTitles(query);
+}
+
+function openTitle(id) {
+  const item = allTitles.find(x => x.id === id);
+  if(!item) return;
+
+  document.getElementById("playerTitle").textContent = item.title;
+  document.getElementById("playerDescription").textContent = item.description || "";
+
+  const video = document.getElementById("video");
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+
+  if(item.video_url) {
+    video.src = safeURL(item.video_url);
+  }
+
+  document.getElementById("player").style.display = "block";
+}
+
+function closePlayer() {
+  const video = document.getElementById("video");
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+  document.getElementById("player").style.display = "none";
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function safeURL(value) {
+  try {
+    const url = new URL(value);
+    return ["https:","http:"].includes(url.protocol) ? url.href : "";
+  } catch {
+    return "";
+  }
+}
+
+loadTitles();
 </script>
 
 </body>

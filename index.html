@@ -15,17 +15,10 @@ button,a,select{cursor:pointer}
 button{font-family:inherit}
 
 header{
- background:#10121b;
- border-bottom:1px solid #252735;
- padding:13px 5%;
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:15px;
- flex-wrap:wrap;
- position:sticky;
- top:0;
- z-index:10
+ background:#10121b;border-bottom:1px solid #252735;
+ padding:13px 5%;display:flex;justify-content:space-between;
+ align-items:center;gap:15px;flex-wrap:wrap;
+ position:sticky;top:0;z-index:10
 }
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
 .brand-mark{
@@ -36,14 +29,12 @@ header{
 }
 .brand-mark:before{
  content:"";width:19px;height:19px;border:3px solid #fff;
- border-right-color:#ed1745;border-radius:50%;
- position:absolute
+ border-right-color:#ed1745;border-radius:50%;position:absolute
 }
 .brand-mark:after{
  content:"";position:absolute;left:15px;top:12px;
  border-left:10px solid #ed1745;
- border-top:7px solid transparent;
- border-bottom:7px solid transparent
+ border-top:7px solid transparent;border-bottom:7px solid transparent
 }
 .brand-name{font-size:19px;font-weight:900;letter-spacing:1.5px}
 .brand-name span{color:#ed1745}
@@ -57,8 +48,7 @@ nav button{
 
 .hero{
  padding:65px 6%;min-height:330px;
- background:
- linear-gradient(90deg,#08090ef5 0%,#08090ebd 55%,#08090e55 100%),
+ background:linear-gradient(90deg,#08090ef5 0%,#08090ebd 55%,#08090e55 100%),
  url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1000&q=45');
  background-size:cover;background-position:center;
  display:flex;flex-direction:column;justify-content:center
@@ -68,9 +58,8 @@ nav button{
 .hero h1 span{color:#ed1745}
 .hero p{color:#c1c1ca;line-height:1.7;max-width:460px;font-size:14px}
 .action{
- background:#ed1745;color:white;border:0;
- padding:13px 19px;border-radius:5px;
- margin-top:20px;font-weight:bold
+ background:#ed1745;color:white;border:0;padding:13px 19px;
+ border-radius:5px;margin-top:20px;font-weight:bold
 }
 .action:hover,nav button:hover{background:#bd1035}
 
@@ -80,7 +69,6 @@ nav button{
  border:1px solid #303344;border-radius:7px;font-size:14px
 }
 .search input:focus{outline:1px solid #ed1745}
-
 .section{padding:18px 5% 30px}
 .section h2{
  font-size:20px;border-left:4px solid #ed1745;
@@ -145,7 +133,7 @@ nav button{
  margin-top:15px;padding:13px;background:#202433;border-radius:7px
 }
 .player-controls label{font-size:13px;color:#ddd}
-.player-controls select{
+.player-controls select,.season-select{
  background:#10131d;color:white;border:1px solid #45495a;
  padding:10px;border-radius:5px
 }
@@ -155,6 +143,29 @@ nav button{
  font-size:13px;font-weight:bold
 }
 .quality-note{font-size:11px;color:#999;margin-top:10px;line-height:1.5}
+
+/* Series episode section */
+#seriesEpisodes{
+ display:none;margin-top:20px;padding:15px;
+ background:#1b2030;border:1px solid #303849;border-radius:8px
+}
+.series-heading{font-size:17px;margin-bottom:12px}
+.series-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:15px}
+.series-tools label{font-size:13px;color:#ccc}
+#episodeList{display:grid;gap:9px}
+.episode-item{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:12px;padding:12px;background:#10131d;border:1px solid #303344;
+ border-radius:7px
+}
+.episode-item h4{font-size:13px;margin-bottom:5px}
+.episode-item p{font-size:11px;color:#aaa;line-height:1.5}
+.episode-item button{
+ background:#ed1745;color:white;border:0;padding:9px 12px;
+ border-radius:5px;white-space:nowrap;font-size:12px
+}
+.episode-item button:hover{background:#bd1035}
+#episodeNow{color:#ed1745;font-size:12px;margin-top:12px}
 
 footer{
  text-align:center;background:#10121b;padding:28px 15px;
@@ -176,6 +187,8 @@ footer{
  .info{padding:9px}
  .card button{padding:8px;font-size:10px}
  .player{padding:13px}
+ .episode-item{align-items:flex-start}
+ .episode-item button{padding:8px}
 }
 </style>
 </head>
@@ -187,7 +200,6 @@ footer{
  <span class="brand-mark"></span>
  <span class="brand-name">ORVEX <span>MOVIES</span></span>
 </a>
-
 <nav>
 <a href="#home">Home</a>
 <a href="#movies">Movies</a>
@@ -261,13 +273,23 @@ footer{
 
 <video id="video" controls playsinline preload="none"></video>
 
-<div class="player-controls">
+<div class="player-controls" id="movieControls">
 <label for="qualitySelect">Video quality:</label>
 <select id="qualitySelect" onchange="changeQuality()"></select>
 <a id="downloadButton" class="download" href="#" download>Download</a>
 </div>
 
-<p class="quality-note">
+<div id="seriesEpisodes">
+<h3 class="series-heading">Episodes</h3>
+<div class="series-tools">
+<label for="seasonSelect">Choose season:</label>
+<select id="seasonSelect" class="season-select" onchange="renderEpisodes()"></select>
+</div>
+<div id="episodeList"></div>
+<p id="episodeNow"></p>
+</div>
+
+<p class="quality-note" id="playerNote">
 Only available video qualities are shown. Playback and downloads depend on the authorized video source.
 </p>
 </div>
@@ -290,6 +312,8 @@ const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let allTitles=[];
 let currentUser=null;
 let currentTitle=null;
+let currentEpisode=null;
+let allEpisodes=[];
 let lastProgressSave=0;
 let currentVideoURL="";
 
@@ -310,7 +334,6 @@ function showAuth(){
  document.getElementById("authPanel").style.display="block";
  document.getElementById("authPanel").scrollIntoView();
 }
-
 function hideAuth(){
  document.getElementById("authPanel").style.display="none";
 }
@@ -318,21 +341,13 @@ function hideAuth(){
 async function registerViewer(){
  const email=document.getElementById("authEmail").value.trim();
  const password=document.getElementById("authPassword").value;
-
  if(!email||password.length<6){
   setMessage("authMessage","Enter your email and a password of at least 6 characters.");
   return;
  }
-
  setMessage("authMessage","Creating your account...");
-
  const {data,error}=await db.auth.signUp({email,password});
-
- if(error){
-  setMessage("authMessage",error.message);
-  return;
- }
-
+ if(error){setMessage("authMessage",error.message);return;}
  if(data.session){
   setMessage("authMessage","Account created successfully!");
  }else{
@@ -343,44 +358,27 @@ async function registerViewer(){
 async function loginViewer(){
  const email=document.getElementById("authEmail").value.trim();
  const password=document.getElementById("authPassword").value;
-
  if(!email||!password){
   setMessage("authMessage","Enter your email and password.");
   return;
  }
-
  setMessage("authMessage","Logging in...");
-
  const {error}=await db.auth.signInWithPassword({email,password});
-
- if(error){
-  setMessage("authMessage",error.message);
-  return;
- }
-
+ if(error){setMessage("authMessage",error.message);return;}
  setMessage("authMessage","Login successful!");
 }
 
-async function logoutViewer(){
- await db.auth.signOut();
-}
-
-function setMessage(id,value){
- document.getElementById(id).textContent=value;
-}
+async function logoutViewer(){await db.auth.signOut();}
+function setMessage(id,value){document.getElementById(id).textContent=value;}
 
 async function loadTitles(){
  const movieGrid=document.getElementById("movieGrid");
  const seriesGrid=document.getElementById("seriesGrid");
-
  try{
   const {data,error}=await db.from("titles")
-   .select("*")
-   .eq("status","published")
+   .select("*").eq("status","published")
    .order("created_at",{ascending:false});
-
   if(error)throw error;
-
   allTitles=data||[];
   renderTitles();
  }catch(error){
@@ -392,15 +390,12 @@ async function loadTitles(){
 
 function makeCards(items,mode="normal"){
  if(!items.length)return '<p class="message">Nothing to show yet.</p>';
-
  return items.map(item=>{
   const poster=safeURL(item.poster_url);
   const image=poster
    ? `<img src="${escapeHTML(poster)}" alt="" loading="lazy">`
    : `<div class="no-poster">ORVEX MOVIES</div>`;
-
   let buttons="";
-
   if(mode==="watchlist"){
    buttons=`<button onclick="openTitle('${item.id}')">View</button>
    <button class="secondary" onclick="removeWatchlist('${item.id}')">Remove</button>`;
@@ -410,7 +405,6 @@ function makeCards(items,mode="normal"){
    buttons=`<button onclick="openTitle('${item.id}')">${item.content_type==="series"?"View Series":"View Movie"}</button>
    <button class="secondary" onclick="addWatchlist('${item.id}')">+ Watchlist</button>`;
   }
-
   return `<div class="card">
    ${image}
    <div class="info">
@@ -426,14 +420,11 @@ function renderTitles(query=""){
  const matches=allTitles.filter(item=>
   String(item.title||"").toLowerCase().includes(query)
  );
-
  document.getElementById("movieGrid").innerHTML=
   makeCards(matches.filter(x=>x.content_type==="movie"));
-
  document.getElementById("seriesGrid").innerHTML=
   makeCards(matches.filter(x=>x.content_type==="series"));
 }
-
 function filterTitles(){
  const query=document.getElementById("search").value.toLowerCase().trim();
  renderTitles(query);
@@ -441,79 +432,50 @@ function filterTitles(){
 
 async function addWatchlist(titleId){
  if(!currentUser){
-  alert("Please login to save movies to your watchlist.");
-  showAuth();
-  return;
+  alert("Please login to save titles to your watchlist.");
+  showAuth();return;
  }
-
  const {data:existing}=await db.from("watchlist")
-  .select("id")
-  .eq("user_id",currentUser.id)
-  .eq("title_id",titleId)
-  .maybeSingle();
-
- if(existing){
-  alert("This title is already in your watchlist.");
-  return;
- }
-
+  .select("id").eq("user_id",currentUser.id)
+  .eq("title_id",titleId).maybeSingle();
+ if(existing){alert("This title is already in your watchlist.");return;}
  const {error}=await db.from("watchlist").insert({
-  user_id:currentUser.id,
-  title_id:titleId
+  user_id:currentUser.id,title_id:titleId
  });
-
- if(error){
-  alert("Could not add to watchlist: "+error.message);
-  return;
- }
-
+ if(error){alert("Could not add to watchlist: "+error.message);return;}
  alert("Added to My Watchlist!");
  await loadPersonalSections();
 }
 
 async function removeWatchlist(titleId){
  if(!currentUser)return;
-
  const {error}=await db.from("watchlist")
-  .delete()
-  .eq("user_id",currentUser.id)
-  .eq("title_id",titleId);
-
- if(error){
-  alert("Could not remove item: "+error.message);
-  return;
- }
-
+  .delete().eq("user_id",currentUser.id).eq("title_id",titleId);
+ if(error){alert("Could not remove item: "+error.message);return;}
  await loadPersonalSections();
 }
 
 async function loadPersonalSections(){
  const watchGrid=document.getElementById("watchlistGrid");
  const continueGrid=document.getElementById("continueGrid");
-
  if(!currentUser){
   watchGrid.innerHTML='<p class="message">Login to see your watchlist.</p>';
   continueGrid.innerHTML='<p class="message">Login to see your viewing progress.</p>';
   return;
  }
-
  try{
   const {data:watchData,error:watchError}=await db.from("watchlist")
-   .select("title_id")
-   .eq("user_id",currentUser.id);
-
+   .select("title_id").eq("user_id",currentUser.id);
   if(watchError)throw watchError;
-
   const watchIds=(watchData||[]).map(x=>x.title_id);
-  const watchTitles=allTitles.filter(x=>watchIds.includes(x.id));
-
-  watchGrid.innerHTML=makeCards(watchTitles,"watchlist");
+  watchGrid.innerHTML=makeCards(
+   allTitles.filter(x=>watchIds.includes(x.id)),"watchlist"
+  );
 
   const {data:progressData,error:progressError}=await db.from("watch_progress")
    .select("title_id,position_seconds,duration_seconds,updated_at")
    .eq("user_id",currentUser.id)
    .order("updated_at",{ascending:false});
-
   if(progressError)throw progressError;
 
   const progressTitles=(progressData||[])
@@ -524,38 +486,27 @@ async function loadPersonalSections(){
    }).filter(Boolean);
 
   continueGrid.innerHTML=makeCards(progressTitles,"continue");
-
  }catch(error){
   watchGrid.innerHTML='<p class="message">Unable to load watchlist: '+escapeHTML(error.message)+'</p>';
   continueGrid.innerHTML='<p class="message">Unable to load progress.</p>';
  }
 }
 
-/* Build quality options from actual video URLs */
+/* Movie video quality options */
 function getVideoQualities(item){
- const qualities=[];
-
  const sources=[
   {label:"240p",url:item.video_url_240p},
   {label:"360p",url:item.video_url_360p},
   {label:"480p",url:item.video_url_480p},
   {label:"720p",url:item.video_url_720p||item.video_url}
  ];
-
- sources.forEach(source=>{
-  const url=safeURL(source.url);
-  if(url){
-   qualities.push({label:source.label,url});
-  }
- });
-
- return qualities;
+ return sources.map(s=>({label:s.label,url:safeURL(s.url)}))
+  .filter(s=>s.url);
 }
 
 function applyVideoSource(url,restoreTime=0,wasPlaying=false){
  const video=document.getElementById("video");
  const safe=safeURL(url);
-
  if(!safe)return;
 
  currentVideoURL=safe;
@@ -567,58 +518,60 @@ function applyVideoSource(url,restoreTime=0,wasPlaying=false){
   if(restoreTime>0&&Number.isFinite(video.duration)){
    video.currentTime=Math.min(restoreTime,video.duration);
   }
-  if(wasPlaying){
-   video.play().catch(()=>{});
-  }
+  if(wasPlaying)video.play().catch(()=>{});
  },{once:true});
 
  document.getElementById("downloadButton").href=safe;
 }
 
+/* Open a movie or series */
 async function openTitle(id){
  const item=allTitles.find(x=>x.id===id);
  if(!item)return;
 
  currentTitle=item;
+ currentEpisode=null;
+ allEpisodes=[];
+ lastProgressSave=0;
+
+ const video=document.getElementById("video");
+ video.pause();
+ video.removeAttribute("src");
+ video.load();
+
+ document.getElementById("playerTitle").textContent=item.title;
+ document.getElementById("playerDescription").textContent=item.description||"";
+ document.getElementById("player").style.display="block";
 
  if(item.content_type==="series"){
-  alert("Series episode playback will be added in the next update.");
+  await loadSeriesEpisodes(item);
   return;
  }
 
- const qualities=getVideoQualities(item);
+ document.getElementById("seriesEpisodes").style.display="none";
+ document.getElementById("movieControls").style.display="flex";
+ document.getElementById("playerNote").style.display="block";
 
+ const qualities=getVideoQualities(item);
  if(!qualities.length){
   alert("This title does not have a video link yet.");
   return;
  }
-
- document.getElementById("playerTitle").textContent=item.title;
- document.getElementById("playerDescription").textContent=item.description||"";
 
  const qualitySelect=document.getElementById("qualitySelect");
  qualitySelect.innerHTML=qualities.map(q=>
   `<option value="${escapeHTML(q.label)}">${escapeHTML(q.label)}</option>`
  ).join("");
 
- /* Prefer the lowest available quality to save data */
  const selected=qualities[0];
  qualitySelect.value=selected.label;
-
- document.getElementById("player").style.display="block";
- lastProgressSave=0;
-
  applyVideoSource(selected.url);
 
  if(currentUser){
   const {data}=await db.from("watch_progress")
-   .select("position_seconds")
-   .eq("user_id",currentUser.id)
-   .eq("title_id",item.id)
-   .maybeSingle();
-
+   .select("position_seconds").eq("user_id",currentUser.id)
+   .eq("title_id",item.id).maybeSingle();
   if(data&&data.position_seconds>0){
-   const video=document.getElementById("video");
    video.addEventListener("loadedmetadata",function restore(){
     if(Number.isFinite(video.duration)){
      video.currentTime=Math.min(data.position_seconds,video.duration);
@@ -628,22 +581,127 @@ async function openTitle(id){
  }
 }
 
+/* Load episodes belonging to the selected series */
+async function loadSeriesEpisodes(series){
+ document.getElementById("movieControls").style.display="none";
+ document.getElementById("seriesEpisodes").style.display="block";
+ document.getElementById("playerNote").style.display="none";
+ document.getElementById("episodeList").innerHTML=
+  '<p class="message">Loading episodes...</p>';
+ document.getElementById("episodeNow").textContent="";
+
+ const {data,error}=await db.from("episodes")
+  .select("*")
+  .eq("series_id",series.id)
+  .order("season_number",{ascending:true})
+  .order("episode_number",{ascending:true});
+
+ if(error){
+  document.getElementById("episodeList").innerHTML=
+   '<p class="message">Unable to load episodes: '+escapeHTML(error.message)+'</p>';
+  console.error(error);
+  return;
+ }
+
+ allEpisodes=data||[];
+
+ if(!allEpisodes.length){
+  document.getElementById("episodeList").innerHTML=
+   '<p class="message">No episodes have been added to this series yet.</p>';
+  document.getElementById("seasonSelect").innerHTML="";
+  return;
+ }
+
+ const seasons=[...new Set(allEpisodes.map(e=>Number(e.season_number)||1))].sort((a,b)=>a-b);
+
+ document.getElementById("seasonSelect").innerHTML=seasons.map(season=>
+  `<option value="${season}">Season ${season}</option>`
+ ).join("");
+
+ renderEpisodes();
+}
+
+/* Display episodes for selected season */
+function renderEpisodes(){
+ const season=Number(document.getElementById("seasonSelect").value);
+ const episodes=allEpisodes.filter(e=>(Number(e.season_number)||1)===season);
+ const list=document.getElementById("episodeList");
+
+ if(!episodes.length){
+  list.innerHTML='<p class="message">No episodes in this season.</p>';
+  return;
+ }
+
+ list.innerHTML=episodes.map(episode=>{
+  const episodeTitle=episode.title||("Episode "+episode.episode_number);
+  const description=episode.description||"";
+  const hasVideo=!!safeURL(episode.video_url);
+
+  return `<div class="episode-item">
+   <div>
+    <h4>Episode ${escapeHTML(episode.episode_number)}: ${escapeHTML(episodeTitle)}</h4>
+    <p>${escapeHTML(description)}</p>
+   </div>
+   <button ${hasVideo?"":"disabled"} style="${hasVideo?"":"opacity:.4;cursor:not-allowed"}"
+    onclick="playEpisode('${episode.id}')">
+    ${hasVideo?"Play":"Unavailable"}
+   </button>
+  </div>`;
+ }).join("");
+}
+
+/* Play a selected episode */
+function playEpisode(episodeId){
+ const episode=allEpisodes.find(e=>e.id===episodeId);
+ if(!episode)return;
+
+ const url=safeURL(episode.video_url);
+ if(!url){
+  alert("This episode does not have a valid video link yet.");
+  return;
+  }
+
+ currentEpisode=episode;
+ lastProgressSave=0;
+
+ const season=Number(episode.season_number)||1;
+ const number=Number(episode.episode_number)||1;
+ const episodeName=episode.title||("Episode "+number);
+
+ document.getElementById("playerTitle").textContent=
+  currentTitle.title+" — S"+String(season).padStart(2,"0")+
+  "E"+String(number).padStart(2,"0");
+
+ document.getElementById("playerDescription").textContent=episode.description||"";
+ document.getElementById("episodeNow").textContent=
+  "Now playing: Season "+season+", Episode "+number+" — "+episodeName;
+
+ document.getElementById("downloadButton").href=url;
+ document.getElementById("movieControls").style.display="flex";
+ document.getElementById("qualitySelect").style.display="none";
+ document.querySelector('label[for="qualitySelect"]').style.display="none";
+ document.getElementById("playerNote").textContent=
+  "Episode quality depends on the video source.";
+
+ applyVideoSource(url);
+}
+
+/* Change quality for movies */
 function changeQuality(){
- if(!currentTitle)return;
+ if(!currentTitle||currentTitle.content_type==="series")return;
 
  const qualities=getVideoQualities(currentTitle);
  const selectedLabel=document.getElementById("qualitySelect").value;
  const selected=qualities.find(q=>q.label===selectedLabel);
-
  if(!selected)return;
 
  const video=document.getElementById("video");
  const position=video.currentTime||0;
  const wasPlaying=!video.paused;
-
  applyVideoSource(selected.url,position,wasPlaying);
 }
 
+/* Save viewing progress under the parent movie or series */
 async function saveProgress(){
  if(!currentUser||!currentTitle)return;
 
@@ -665,7 +723,6 @@ async function saveProgress(){
  const {error}=await db.from("watch_progress").upsert(record,{
   onConflict:"user_id,title_id"
  });
-
  if(error)console.error("Progress save failed:",error.message);
 }
 
@@ -675,10 +732,18 @@ async function closePlayer(){
  video.pause();
  video.removeAttribute("src");
  video.load();
+
  document.getElementById("player").style.display="none";
  document.getElementById("downloadButton").removeAttribute("href");
+ document.getElementById("qualitySelect").style.display="block";
+ document.querySelector('label[for="qualitySelect"]').style.display="inline";
+ document.getElementById("seriesEpisodes").style.display="none";
+ document.getElementById("movieControls").style.display="flex";
+
  currentTitle=null;
+ currentEpisode=null;
  currentVideoURL="";
+ allEpisodes=[];
  await loadPersonalSections();
 }
 
@@ -687,7 +752,6 @@ document.getElementById("video").addEventListener("pause",saveProgress);
 
 db.auth.onAuthStateChange(async(event,session)=>{
  currentUser=session?session.user:null;
-
  const button=document.getElementById("accountButton");
 
  if(currentUser){
@@ -697,13 +761,11 @@ db.auth.onAuthStateChange(async(event,session)=>{
   button.textContent="Login / Register";
   button.onclick=showAuth;
  }
-
  await loadPersonalSections();
 });
 
 async function startApp(){
  await loadTitles();
-
  const {data}=await db.auth.getSession();
  currentUser=data.session?data.session.user:null;
 
@@ -711,7 +773,6 @@ async function startApp(){
   document.getElementById("accountButton").textContent="Logout";
   document.getElementById("accountButton").onclick=logoutViewer;
  }
-
  await loadPersonalSections();
 }
 

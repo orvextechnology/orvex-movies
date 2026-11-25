@@ -63,12 +63,23 @@ nav button{
 }
 .action:hover,nav button:hover{background:#bd1035}
 
-.search{padding:22px 5%}
+.search{padding:18px 5% 10px}
 .search input{
  width:100%;padding:15px;background:#151722;color:white;
  border:1px solid #303344;border-radius:7px;font-size:14px
 }
 .search input:focus{outline:1px solid #ed1745}
+
+.filters{
+ padding:8px 5% 20px;display:flex;gap:10px;flex-wrap:wrap;
+ align-items:center
+}
+.filters label{font-size:13px;color:#bbb}
+.filters select{
+ background:#151722;color:white;border:1px solid #303344;
+ padding:11px;border-radius:6px;min-width:180px
+}
+
 .section{padding:18px 5% 30px}
 .section h2{
  font-size:20px;border-left:4px solid #ed1745;
@@ -90,7 +101,11 @@ nav button{
 }
 .info{padding:11px}
 .info h3{font-size:14px;margin-bottom:7px}
-.info p{font-size:11px;color:#aaa}
+.info p{font-size:11px;color:#aaa;line-height:1.5}
+.category-tag{
+ display:inline-block;margin-top:7px;padding:4px 7px;
+ background:#29202a;color:#ff8aa5;border-radius:4px;font-size:10px
+}
 .card button{
  font-size:11px;padding:9px 10px;margin:10px 5px 10px 0;
  border:0;border-radius:5px;background:#ed1745;color:white
@@ -124,7 +139,13 @@ nav button{
  border:1px solid #303344;padding:18px;border-radius:10px
 }
 .player-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
-.player video{width:100%;background:#000;margin-top:15px;max-height:65vh}
+.player video{
+ width:100%;background:#000;margin-top:15px;max-height:65vh
+}
+#youtubeFrame{
+ display:none;width:100%;aspect-ratio:16/9;
+ border:0;background:#000;margin-top:15px
+}
 .player h2{margin:15px 0 8px}
 #playerDescription{color:#bbb;font-size:13px;line-height:1.6}
 #close{background:#343846;color:white;border:0;padding:10px 14px;border-radius:5px}
@@ -137,6 +158,11 @@ nav button{
  background:#10131d;color:white;border:1px solid #45495a;
  padding:10px;border-radius:5px
 }
+.player-controls button{
+ background:#343b50;color:white;border:0;padding:10px 13px;
+ border-radius:5px;font-weight:bold
+}
+.player-controls button:hover{background:#ed1745}
 .download{
  display:inline-block;background:#ed1745;color:white;
  text-decoration:none;padding:10px 13px;border-radius:5px;
@@ -189,6 +215,7 @@ footer{
  .player{padding:13px}
  .episode-item{align-items:flex-start}
  .episode-item button{padding:8px}
+ .filters{padding-left:4%;padding-right:4%}
 }
 </style>
 </head>
@@ -234,6 +261,33 @@ footer{
 <input id="search" type="search" placeholder="Search movies and series..." oninput="filterTitles()">
 </div>
 
+<div class="filters">
+<label for="categoryFilter">Browse category:</label>
+<select id="categoryFilter" onchange="filterTitles()">
+<option value="">All Categories</option>
+<option>Action</option>
+<option>Adventure</option>
+<option>Animation</option>
+<option>Anime</option>
+<option>Comedy</option>
+<option>Crime</option>
+<option>Documentary</option>
+<option>Drama</option>
+<option>Family</option>
+<option>Fantasy</option>
+<option>Horror</option>
+<option>K-Drama</option>
+<option>Mystery</option>
+<option>Romance</option>
+<option>Sci-Fi</option>
+<option>Thriller</option>
+<option>War</option>
+<option>Western</option>
+<option>General</option>
+<option>Other</option>
+</select>
+</div>
+
 <section class="section" id="movies">
 <h2>Latest Movies</h2>
 <div class="grid" id="movieGrid"><p class="message">Loading movies...</p></div>
@@ -272,10 +326,17 @@ footer{
 <p id="playerDescription"></p>
 
 <video id="video" controls playsinline preload="none"></video>
+<iframe id="youtubeFrame"
+ title="YouTube episode player"
+ allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+ referrerpolicy="strict-origin-when-cross-origin"
+ allowfullscreen></iframe>
 
 <div class="player-controls" id="movieControls">
 <label for="qualitySelect">Video quality:</label>
 <select id="qualitySelect" onchange="changeQuality()"></select>
+<button id="rewindButton" onclick="seekVideo(-10)">⏪ 10s</button>
+<button id="forwardButton" onclick="seekVideo(10)">10s ⏩</button>
 <a id="downloadButton" class="download" href="#" download>Download</a>
 </div>
 
@@ -321,6 +382,28 @@ function safeURL(value){
  try{
   const url=new URL(value);
   return ["https:","http:"].includes(url.protocol)?url.href:"";
+ }catch{return "";}
+}
+
+function youtubeID(value){
+ try{
+  const url=new URL(value);
+  let id="";
+  if(url.hostname==="youtu.be"){
+   id=url.pathname.split("/").filter(Boolean)[0]||"";
+  }else if(
+   url.hostname==="youtube.com"||
+   url.hostname==="www.youtube.com"||
+   url.hostname==="m.youtube.com"||
+   url.hostname==="youtube-nocookie.com"||
+   url.hostname==="www.youtube-nocookie.com"
+  ){
+   if(url.pathname==="/watch")id=url.searchParams.get("v")||"";
+   else if(url.pathname.startsWith("/embed/")||url.pathname.startsWith("/shorts/")){
+    id=url.pathname.split("/")[2]||"";
+   }
+  }
+  return /^[a-zA-Z0-9_-]{11}$/.test(id)?id:"";
  }catch{return "";}
 }
 
@@ -395,6 +478,7 @@ function makeCards(items,mode="normal"){
   const image=poster
    ? `<img src="${escapeHTML(poster)}" alt="" loading="lazy">`
    : `<div class="no-poster">ORVEX MOVIES</div>`;
+  const category=item.category||"General";
   let buttons="";
   if(mode==="watchlist"){
    buttons=`<button onclick="openTitle('${item.id}')">View</button>
@@ -410,25 +494,32 @@ function makeCards(items,mode="normal"){
    <div class="info">
     <h3>${escapeHTML(item.title)}</h3>
     <p>${escapeHTML(item.release_year||"")} • ${escapeHTML(item.content_type)}</p>
+    <span class="category-tag">${escapeHTML(category)}</span>
     ${buttons}
    </div>
   </div>`;
  }).join("");
 }
 
-function renderTitles(query=""){
- const matches=allTitles.filter(item=>
-  String(item.title||"").toLowerCase().includes(query)
- );
+function renderTitles(){
+ const query=document.getElementById("search").value.toLowerCase().trim();
+ const category=document.getElementById("categoryFilter").value.toLowerCase();
+
+ const matches=allTitles.filter(item=>{
+  const titleMatch=String(item.title||"").toLowerCase().includes(query);
+  const descriptionMatch=String(item.description||"").toLowerCase().includes(query);
+  const categoryMatch=!category||
+   String(item.category||"General").toLowerCase()===category;
+  return (titleMatch||descriptionMatch)&&categoryMatch;
+ });
+
  document.getElementById("movieGrid").innerHTML=
   makeCards(matches.filter(x=>x.content_type==="movie"));
  document.getElementById("seriesGrid").innerHTML=
   makeCards(matches.filter(x=>x.content_type==="series"));
 }
-function filterTitles(){
- const query=document.getElementById("search").value.toLowerCase().trim();
- renderTitles(query);
-}
+
+function filterTitles(){renderTitles();}
 
 async function addWatchlist(titleId){
  if(!currentUser){
@@ -504,15 +595,24 @@ function getVideoQualities(item){
   .filter(s=>s.url);
 }
 
-function applyVideoSource(url,restoreTime=0,wasPlaying=false){
+function showMP4Player(url,restoreTime=0,wasPlaying=false){
  const video=document.getElementById("video");
+ const frame=document.getElementById("youtubeFrame");
  const safe=safeURL(url);
  if(!safe)return;
 
+ frame.style.display="none";
+ frame.src="about:blank";
+ video.style.display="block";
  currentVideoURL=safe;
  video.pause();
  video.src=safe;
  video.load();
+
+ document.getElementById("rewindButton").style.display="inline-block";
+ document.getElementById("forwardButton").style.display="inline-block";
+ document.getElementById("downloadButton").style.display="inline-block";
+ document.getElementById("downloadButton").href=safe;
 
  video.addEventListener("loadedmetadata",function restore(){
   if(restoreTime>0&&Number.isFinite(video.duration)){
@@ -520,8 +620,28 @@ function applyVideoSource(url,restoreTime=0,wasPlaying=false){
   }
   if(wasPlaying)video.play().catch(()=>{});
  },{once:true});
+}
 
- document.getElementById("downloadButton").href=safe;
+function showYouTubePlayer(id){
+ const video=document.getElementById("video");
+ const frame=document.getElementById("youtubeFrame");
+ video.pause();
+ video.removeAttribute("src");
+ video.load();
+ video.style.display="none";
+ frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id)+"?autoplay=1&rel=0&playsinline=1";
+ frame.style.display="block";
+
+ document.getElementById("rewindButton").style.display="none";
+ document.getElementById("forwardButton").style.display="none";
+ document.getElementById("downloadButton").style.display="none";
+ document.getElementById("downloadButton").removeAttribute("href");
+}
+
+function seekVideo(seconds){
+ const video=document.getElementById("video");
+ if(video.style.display==="none"||!Number.isFinite(video.duration))return;
+ video.currentTime=Math.max(0,Math.min(video.duration,video.currentTime+seconds));
 }
 
 /* Open a movie or series */
@@ -538,10 +658,16 @@ async function openTitle(id){
  video.pause();
  video.removeAttribute("src");
  video.load();
+ video.style.display="block";
+ document.getElementById("youtubeFrame").src="about:blank";
+ document.getElementById("youtubeFrame").style.display="none";
 
  document.getElementById("playerTitle").textContent=item.title;
  document.getElementById("playerDescription").textContent=item.description||"";
  document.getElementById("player").style.display="block";
+ document.getElementById("downloadButton").style.display="inline-block";
+ document.getElementById("rewindButton").style.display="inline-block";
+ document.getElementById("forwardButton").style.display="inline-block";
 
  if(item.content_type==="series"){
   await loadSeriesEpisodes(item);
@@ -554,7 +680,9 @@ async function openTitle(id){
 
  const qualities=getVideoQualities(item);
  if(!qualities.length){
-  alert("This title does not have a video link yet.");
+  document.getElementById("video").style.display="none";
+  document.getElementById("downloadButton").style.display="none";
+  alert("This title does not have a direct video link yet.");
   return;
  }
 
@@ -562,10 +690,9 @@ async function openTitle(id){
  qualitySelect.innerHTML=qualities.map(q=>
   `<option value="${escapeHTML(q.label)}">${escapeHTML(q.label)}</option>`
  ).join("");
-
  const selected=qualities[0];
  qualitySelect.value=selected.label;
- applyVideoSource(selected.url);
+ showMP4Player(selected.url);
 
  if(currentUser){
   const {data}=await db.from("watch_progress")
@@ -635,7 +762,7 @@ function renderEpisodes(){
  list.innerHTML=episodes.map(episode=>{
   const episodeTitle=episode.title||("Episode "+episode.episode_number);
   const description=episode.description||"";
-  const hasVideo=!!safeURL(episode.video_url);
+  const hasVideo=!!safeURL(episode.video_url)||!!youtubeID(episode.video_url);
 
   return `<div class="episode-item">
    <div>
@@ -656,10 +783,11 @@ function playEpisode(episodeId){
  if(!episode)return;
 
  const url=safeURL(episode.video_url);
- if(!url){
+ const ytID=youtubeID(episode.video_url);
+ if(!url&&!ytID){
   alert("This episode does not have a valid video link yet.");
   return;
-  }
+ }
 
  currentEpisode=episode;
  lastProgressSave=0;
@@ -676,14 +804,17 @@ function playEpisode(episodeId){
  document.getElementById("episodeNow").textContent=
   "Now playing: Season "+season+", Episode "+number+" — "+episodeName;
 
- document.getElementById("downloadButton").href=url;
  document.getElementById("movieControls").style.display="flex";
  document.getElementById("qualitySelect").style.display="none";
  document.querySelector('label[for="qualitySelect"]').style.display="none";
  document.getElementById("playerNote").textContent=
-  "Episode quality depends on the video source.";
+  "Episode playback depends on the video source and its permissions.";
 
- applyVideoSource(url);
+ if(ytID){
+  showYouTubePlayer(ytID);
+ }else{
+  showMP4Player(url);
+ }
 }
 
 /* Change quality for movies */
@@ -698,7 +829,7 @@ function changeQuality(){
  const video=document.getElementById("video");
  const position=video.currentTime||0;
  const wasPlaying=!video.paused;
- applyVideoSource(selected.url,position,wasPlaying);
+ showMP4Player(selected.url,position,wasPlaying);
 }
 
 /* Save viewing progress under the parent movie or series */
@@ -706,6 +837,7 @@ async function saveProgress(){
  if(!currentUser||!currentTitle)return;
 
  const video=document.getElementById("video");
+ if(video.style.display==="none")return;
  if(!video.duration||!Number.isFinite(video.duration))return;
 
  const now=Date.now();
@@ -724,21 +856,27 @@ async function saveProgress(){
   onConflict:"user_id,title_id"
  });
  if(error)console.error("Progress save failed:",error.message);
-}
-
-async function closePlayer(){
+ }
+ async function closePlayer(){
  const video=document.getElementById("video");
  await saveProgress();
  video.pause();
  video.removeAttribute("src");
  video.load();
+ video.style.display="block";
+
+ const frame=document.getElementById("youtubeFrame");
+ frame.src="about:blank";
+ frame.style.display="none";
 
  document.getElementById("player").style.display="none";
  document.getElementById("downloadButton").removeAttribute("href");
+ document.getElementById("downloadButton").style.display="inline-block";
  document.getElementById("qualitySelect").style.display="block";
  document.querySelector('label[for="qualitySelect"]').style.display="inline";
  document.getElementById("seriesEpisodes").style.display="none";
  document.getElementById("movieControls").style.display="flex";
+ document.getElementById("playerNote").style.display="block";
 
  currentTitle=null;
  currentEpisode=null;
@@ -774,9 +912,8 @@ async function startApp(){
   document.getElementById("accountButton").onclick=logoutViewer;
  }
  await loadPersonalSections();
-}
-
-startApp();
+ }
+ startApp();
 </script>
 </body>
 </html>

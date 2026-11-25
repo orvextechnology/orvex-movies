@@ -6,39 +6,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080b12">
 <title>ORVEX MOVIES</title>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#080b12;color:white;font-family:Arial,sans-serif}
-header{background:#101522;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+header{background:#101522;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
 .logo{color:#e50935;font-size:21px;font-weight:bold}
-nav{display:flex;gap:14px}
+nav{display:flex;gap:13px;align-items:center;flex-wrap:wrap}
 nav a{color:white;text-decoration:none;font-size:13px}
-.hero{padding:65px 6%;min-height:300px;background:linear-gradient(90deg,#080b12,#080b12aa),url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&q=45');background-size:cover;background-position:center}
-.hero h1{font-size:36px;margin:18px 0}
+nav button{background:#e50935;color:white;border:0;padding:9px 12px;border-radius:5px}
+.hero{padding:60px 6%;min-height:290px;background:linear-gradient(90deg,#080b12,#080b12aa),url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&q=45');background-size:cover;background-position:center}
+.hero h1{font-size:35px;margin:18px 0}
 .hero p{color:#bbb;line-height:1.6;max-width:450px}
-.hero button,.player button{background:#e50935;color:white;border:0;padding:12px 20px;border-radius:5px;margin-top:20px}
+.hero button,.action{background:#e50935;color:white;border:0;padding:11px 15px;border-radius:5px;margin-top:15px;cursor:pointer}
 .search{padding:20px 5%}
 .search input{width:100%;padding:14px;background:#151c2a;color:white;border:1px solid #293247;border-radius:6px}
 .section{padding:15px 5% 30px}
 .section h2{font-size:20px;border-left:4px solid #e50935;padding-left:10px;margin-bottom:18px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.card{background:#151c2a;border-radius:7px;overflow:hidden;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card{background:#151c2a;border-radius:7px;overflow:hidden}
 .card img{width:100%;aspect-ratio:2/3;object-fit:cover;background:#20283a;display:block}
-.info{padding:9px}
-.info h3{font-size:13px;margin-bottom:5px}
+.info{padding:10px}
+.info h3{font-size:13px;margin-bottom:6px}
 .info p{font-size:11px;color:#aaa}
+.card button{font-size:11px;padding:8px;margin:8px 5px 10px 0;border:0;border-radius:4px;background:#e50935;color:white}
+.card button.secondary{background:#30394b}
 .message{color:#aaa;font-size:13px;line-height:1.6;grid-column:1/-1}
-#player{display:none;position:fixed;inset:0;background:#000e;z-index:20;overflow:auto;padding:20px}
-.player{max-width:700px;margin:30px auto;background:#141b29;padding:18px;border-radius:8px}
+#authPanel{display:none;padding:20px 5%}
+.authBox{max-width:430px;margin:auto;background:#151c2a;padding:20px;border-radius:9px}
+.authBox h2{margin-bottom:15px}
+.authBox input{width:100%;padding:13px;margin:7px 0 14px;background:#080f1c;color:white;border:1px solid #303247;border-radius:6px}
+.authBox button{padding:11px 15px;border:0;border-radius:5px;background:#e50935;color:white;margin:5px 5px 5px 0}
+#player{display:none;position:fixed;inset:0;background:#000e;z-index:20;overflow:auto;padding:15px}
+.player{max-width:700px;margin:25px auto;background:#141b29;padding:18px;border-radius:8px}
 .player video{width:100%;background:black;margin-top:15px}
 .player h2{margin:12px 0}
-#close{background:#444;margin-bottom:12px}
+#close{background:#444;color:white;border:0;padding:10px;border-radius:5px}
 footer{text-align:center;background:#101522;padding:25px;color:#999;font-size:12px}
-@media(max-width:380px){.grid{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:30px}}
+@media(max-width:480px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero h1{font-size:29px}nav{gap:9px}}
 </style>
 </head>
-
 <body>
 
 <header>
@@ -47,6 +53,8 @@ footer{text-align:center;background:#101522;padding:25px;color:#999;font-size:12
 <a href="#home">Home</a>
 <a href="#movies">Movies</a>
 <a href="#series">Series</a>
+<a href="#watchlist">My Watchlist</a>
+<button id="accountButton" onclick="showAuth()">Login / Register</button>
 </nav>
 </header>
 
@@ -54,24 +62,48 @@ footer{text-align:center;background:#101522;padding:25px;color:#999;font-size:12
 <small style="color:#e50935">YOUR ENTERTAINMENT WORLD</small>
 <h1>Unlimited Entertainment</h1>
 <p>Discover movies and TV series in one place. Enjoy entertainment with a simple, data-conscious experience.</p>
-<button onclick="document.getElementById('movies').scrollIntoView()">Explore Movies</button>
+<button class="action" onclick="document.getElementById('movies').scrollIntoView()">Explore Movies</button>
+</section>
+
+<section id="authPanel">
+<div class="authBox">
+<h2 id="authHeading">Viewer Account</h2>
+<label>Email address</label>
+<input type="email" id="authEmail" placeholder="Enter your email">
+<label>Password</label>
+<input type="password" id="authPassword" placeholder="Enter password">
+<button onclick="registerViewer()">Create Account</button>
+<button onclick="loginViewer()">Login</button>
+<button onclick="hideAuth()" style="background:#444">Close</button>
+<p class="message" id="authMessage"></p>
+</div>
 </section>
 
 <div class="search">
-<input id="search" type="search" placeholder="Search movies and series..." oninput="filterMovies()">
+<input id="search" type="search" placeholder="Search movies and series..." oninput="filterTitles()">
 </div>
 
 <section class="section" id="movies">
 <h2>Latest Movies</h2>
-<div class="grid" id="movieGrid">
-<p class="message">Loading movies...</p>
-</div>
+<div class="grid" id="movieGrid"><p class="message">Loading movies...</p></div>
 </section>
 
 <section class="section" id="series">
 <h2>TV Series</h2>
-<div class="grid" id="seriesGrid">
-<p class="message">Loading series...</p>
+<div class="grid" id="seriesGrid"><p class="message">Loading series...</p></div>
+</section>
+
+<section class="section" id="watchlist">
+<h2>My Watchlist</h2>
+<div class="grid" id="watchlistGrid">
+<p class="message">Login to see your watchlist.</p>
+</div>
+</section>
+
+<section class="section" id="continue">
+<h2>Continue Watching</h2>
+<div class="grid" id="continueGrid">
+<p class="message">Login to see your viewing progress.</p>
 </div>
 </section>
 
@@ -81,7 +113,9 @@ footer{text-align:center;background:#101522;padding:25px;color:#999;font-size:12
 <h2 id="playerTitle"></h2>
 <p id="playerDescription"></p>
 <video id="video" controls playsinline preload="none"></video>
-<p style="color:#aaa;font-size:12px;margin-top:10px">Video quality depends on the authorized video source.</p>
+<p style="color:#aaa;font-size:12px;margin-top:10px">
+Playback quality depends on the authorized video source.
+</p>
 </div>
 </div>
 
@@ -92,138 +126,356 @@ footer{text-align:center;background:#101522;padding:25px;color:#999;font-size:12
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-const SUPABASE_URL = "https://dfoxaomvdsrylreiqaum.supabase.co";
+const SUPABASE_URL="https://dfoxaomvdsrylreiqaum.supabase.co";
+const SUPABASE_KEY="sb_publishable_oMRvFbAXw15r_RlBw_jSxQ_Z1QVEP4d";
 
-const SUPABASE_KEY = "sb_publishable_oMRvFbAXw15r_RlBw_jSxQ_Z1QVEP4d";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+let allTitles=[];
+let currentUser=null;
+let currentTitle=null;
+let lastProgressSave=0;
 
-let allTitles = [];
+function safeURL(value){
+ try{
+  const url=new URL(value);
+  return ["https:","http:"].includes(url.protocol)?url.href:"";
+ }catch{return "";}
+}
 
-async function loadTitles() {
-  const movieGrid = document.getElementById("movieGrid");
-  const seriesGrid = document.getElementById("seriesGrid");
+function escapeHTML(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
 
-  try {
-    const {data,error} = await db
-      .from("titles")
-      .select("*")
-      .eq("status","published")
-      .order("created_at",{ascending:false});
+function showAuth(){
+ document.getElementById("authPanel").style.display="block";
+ document.getElementById("authPanel").scrollIntoView();
+}
 
-    if(error) throw error;
+function hideAuth(){
+ document.getElementById("authPanel").style.display="none";
+}
 
-    allTitles = data || [];
+async function registerViewer(){
+ const email=document.getElementById("authEmail").value.trim();
+ const password=document.getElementById("authPassword").value;
 
-    renderTitles();
+ if(!email||password.length<6){
+  setMessage("authMessage","Enter your email and a password of at least 6 characters.");
+  return;
+ }
 
-  } catch(error) {
-    console.error(error);
-    movieGrid.innerHTML =
-      '<p class="message">Unable to load movies. Please try again later.</p>';
+ setMessage("authMessage","Creating your account...");
 
-    seriesGrid.innerHTML =
-      '<p class="message">Unable to load TV series.</p>';
+ const {data,error}=await db.auth.signUp({email,password});
+
+ if(error){
+  setMessage("authMessage",error.message);
+  return;
+ }
+
+ if(data.session){
+  setMessage("authMessage","Account created successfully!");
+ }else{
+  setMessage("authMessage","Account created. Check your email for a confirmation link before logging in.");
+ }
+}
+
+async function loginViewer(){
+ const email=document.getElementById("authEmail").value.trim();
+ const password=document.getElementById("authPassword").value;
+
+ if(!email||!password){
+  setMessage("authMessage","Enter your email and password.");
+  return;
+ }
+
+ setMessage("authMessage","Logging in...");
+
+ const {error}=await db.auth.signInWithPassword({email,password});
+
+ if(error){
+  setMessage("authMessage",error.message);
+  return;
+ }
+
+ setMessage("authMessage","Login successful!");
+}
+
+async function logoutViewer(){
+ await db.auth.signOut();
+}
+
+function setMessage(id,value){
+ document.getElementById(id).textContent=value;
+}
+
+async function loadTitles(){
+ const movieGrid=document.getElementById("movieGrid");
+ const seriesGrid=document.getElementById("seriesGrid");
+
+ try{
+  const {data,error}=await db.from("titles")
+   .select("*")
+   .eq("status","published")
+   .order("created_at",{ascending:false});
+
+  if(error)throw error;
+
+  allTitles=data||[];
+  renderTitles();
+ }catch(error){
+  movieGrid.innerHTML='<p class="message">Unable to load movies.</p>';
+  seriesGrid.innerHTML='<p class="message">Unable to load series.</p>';
+  console.error(error);
+ }
+}
+
+function makeCards(items,mode="normal"){
+ if(!items.length)return '<p class="message">Nothing to show yet.</p>';
+
+ return items.map(item=>{
+  const poster=safeURL(item.poster_url);
+  const image=poster
+   ? `<img src="${escapeHTML(poster)}" alt="" loading="lazy">`
+   : `<div style="aspect-ratio:2/3;background:#20283a;display:grid;place-items:center;color:#aaa">No poster</div>`;
+
+  let buttons="";
+
+  if(mode==="watchlist"){
+   buttons=`<button onclick="openTitle('${item.id}')">View</button>
+   <button class="secondary" onclick="removeWatchlist('${item.id}')">Remove</button>`;
+  }else if(mode==="continue"){
+   buttons=`<button onclick="openTitle('${item.id}')">Continue</button>`;
+  }else{
+   buttons=`<button onclick="openTitle('${item.id}')">${item.content_type==="series"?"View Series":"View Movie"}</button>
+   <button class="secondary" onclick="addWatchlist('${item.id}')">+ Watchlist</button>`;
   }
+
+  return `<div class="card">
+   ${image}
+   <div class="info">
+    <h3>${escapeHTML(item.title)}</h3>
+    <p>${escapeHTML(item.release_year||"")} • ${escapeHTML(item.content_type)}</p>
+    ${buttons}
+   </div>
+  </div>`;
+ }).join("");
 }
 
-function renderTitles(query="") {
-  const movies = allTitles.filter(item =>
-    item.content_type === "movie" &&
-    item.title.toLowerCase().includes(query)
-  );
+function renderTitles(query=""){
+ const matches=allTitles.filter(item=>
+  String(item.title||"").toLowerCase().includes(query)
+ );
 
-  const series = allTitles.filter(item =>
-    item.content_type === "series" &&
-    item.title.toLowerCase().includes(query)
-  );
+ document.getElementById("movieGrid").innerHTML=
+  makeCards(matches.filter(x=>x.content_type==="movie"));
 
-  document.getElementById("movieGrid").innerHTML =
-    makeCards(movies);
-
-  document.getElementById("seriesGrid").innerHTML =
-    makeCards(series);
+ document.getElementById("seriesGrid").innerHTML=
+  makeCards(matches.filter(x=>x.content_type==="series"));
 }
 
-function makeCards(items) {
-  if(!items.length) {
-    return '<p class="message">No titles available yet.</p>';
+function filterTitles(){
+ const query=document.getElementById("search").value.toLowerCase().trim();
+ renderTitles(query);
+}
+
+async function addWatchlist(titleId){
+ if(!currentUser){
+  alert("Please login to save movies to your watchlist.");
+  showAuth();
+  return;
+ }
+
+ const {error}=await db.from("watchlist").insert({
+  user_id:currentUser.id,
+  title_id:titleId
+ });
+
+ if(error&&error.code!=="23505"){
+  alert("Could not add to watchlist: "+error.message);
+  return;
+ }
+
+ alert("Added to My Watchlist!");
+ await loadPersonalSections();
+}
+
+async function removeWatchlist(titleId){
+ if(!currentUser)return;
+
+ const {error}=await db.from("watchlist")
+  .delete()
+  .eq("user_id",currentUser.id)
+  .eq("title_id",titleId);
+
+ if(error){
+  alert("Could not remove item: "+error.message);
+  return;
+ }
+
+ await loadPersonalSections();
+}
+
+async function loadPersonalSections(){
+ const watchGrid=document.getElementById("watchlistGrid");
+ const continueGrid=document.getElementById("continueGrid");
+
+ if(!currentUser){
+  watchGrid.innerHTML='<p class="message">Login to see your watchlist.</p>';
+  continueGrid.innerHTML='<p class="message">Login to see your viewing progress.</p>';
+  return;
+ }
+
+ try{
+  const {data:watchData,error:watchError}=await db.from("watchlist")
+   .select("title_id")
+   .eq("user_id",currentUser.id);
+
+  if(watchError)throw watchError;
+
+  const watchIds=(watchData||[]).map(x=>x.title_id);
+  const watchTitles=allTitles.filter(x=>watchIds.includes(x.id));
+
+  watchGrid.innerHTML=makeCards(watchTitles,"watchlist");
+
+  const {data:progressData,error:progressError}=await db.from("watch_progress")
+   .select("title_id,position_seconds,duration_seconds,updated_at")
+   .eq("user_id",currentUser.id)
+   .order("updated_at",{ascending:false});
+
+  if(progressError)throw progressError;
+
+  const progressTitles=(progressData||[])
+   .filter(x=>x.position_seconds>0)
+   .map(progress=>{
+    const title=allTitles.find(x=>x.id===progress.title_id);
+    return title?{...title,progress:progress.position_seconds}:null;
+   }).filter(Boolean);
+
+  continueGrid.innerHTML=makeCards(progressTitles,"continue");
+
+ }catch(error){
+  watchGrid.innerHTML='<p class="message">Unable to load watchlist: '+escapeHTML(error.message)+'</p>';
+  continueGrid.innerHTML='<p class="message">Unable to load progress.</p>';
+ }
+}
+
+async function openTitle(id){
+ const item=allTitles.find(x=>x.id===id);
+ if(!item)return;
+
+ currentTitle=item;
+
+ document.getElementById("playerTitle").textContent=item.title;
+ document.getElementById("playerDescription").textContent=item.description||"";
+
+ const video=document.getElementById("video");
+ video.pause();
+ video.removeAttribute("src");
+ video.load();
+
+ if(item.content_type==="series"){
+  alert("Series episode playback will be added in the next update.");
+  return;
+ }
+
+ if(!item.video_url){
+  alert("This title does not have a video link yet.");
+  return;
+ }
+
+ video.src=safeURL(item.video_url);
+ document.getElementById("player").style.display="block";
+
+ if(currentUser){
+  const {data}=await db.from("watch_progress")
+   .select("position_seconds")
+   .eq("user_id",currentUser.id)
+   .eq("title_id",item.id)
+   .maybeSingle();
+
+  if(data&&data.position_seconds>0){
+   video.addEventListener("loadedmetadata",function restore(){
+    video.currentTime=Math.min(data.position_seconds,video.duration||data.position_seconds);
+   },{once:true});
   }
-
-  return items.map(item => `
-    <div class="card" onclick="openTitle('${item.id}')">
-      <img
-        src="${safeURL(item.poster_url)}"
-        alt=""
-        loading="lazy"
-        onerror="this.style.visibility='hidden'"
-      >
-      <div class="info">
-        <h3>${escapeHTML(item.title)}</h3>
-        <p>${item.release_year || ""} • ${item.content_type === "movie" ? "Movie" : "Series"}</p>
-      </div>
-    </div>
-  `).join("");
+ }
 }
 
-function filterMovies() {
-  const query = document.getElementById("search")
-    .value.toLowerCase().trim();
+async function saveProgress(){
+ if(!currentUser||!currentTitle)return;
 
-  renderTitles(query);
+ const video=document.getElementById("video");
+ if(!video.duration||!Number.isFinite(video.duration))return;
+
+ const now=Date.now();
+ if(now-lastProgressSave<10000)return;
+ lastProgressSave=now;
+
+ const record={
+  user_id:currentUser.id,
+  title_id:currentTitle.id,
+  position_seconds:Math.floor(video.currentTime),
+  duration_seconds:Math.floor(video.duration),
+  updated_at:new Date().toISOString()
+ };
+
+ const {error}=await db.from("watch_progress").upsert(record,{
+  onConflict:"user_id,title_id"
+ });
+
+ if(error)console.error("Progress save failed:",error.message);
 }
 
-function openTitle(id) {
-  const item = allTitles.find(x => x.id === id);
-  if(!item) return;
-
-  document.getElementById("playerTitle").textContent = item.title;
-  document.getElementById("playerDescription").textContent = item.description || "";
-
-  const video = document.getElementById("video");
-  video.pause();
-  video.removeAttribute("src");
-  video.load();
-
-  if(item.video_url) {
-    video.src = safeURL(item.video_url);
-  }
-
-  document.getElementById("player").style.display = "block";
+async function closePlayer(){
+ const video=document.getElementById("video");
+ await saveProgress();
+ video.pause();
+ video.removeAttribute("src");
+ video.load();
+ document.getElementById("player").style.display="none";
+ currentTitle=null;
+ await loadPersonalSections();
 }
 
-function closePlayer() {
-  const video = document.getElementById("video");
-  video.pause();
-  video.removeAttribute("src");
-  video.load();
-  document.getElementById("player").style.display = "none";
+document.getElementById("video").addEventListener("timeupdate",saveProgress);
+document.getElementById("video").addEventListener("pause",saveProgress);
+
+db.auth.onAuthStateChange(async(event,session)=>{
+ currentUser=session?session.user:null;
+
+ const button=document.getElementById("accountButton");
+
+ if(currentUser){
+  button.textContent="Logout";
+  button.onclick=logoutViewer;
+ }else{
+  button.textContent="Login / Register";
+  button.onclick=showAuth;
+ }
+
+ await loadPersonalSections();
+});
+
+async function startApp(){
+ await loadTitles();
+
+ const {data}=await db.auth.getSession();
+ currentUser=data.session?data.session.user:null;
+
+ if(currentUser){
+  document.getElementById("accountButton").textContent="Logout";
+  document.getElementById("accountButton").onclick=logoutViewer;
+ }
+
+ await loadPersonalSections();
 }
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",
-    '"':"&quot;","'":"&#39;"
-  }[c]));
-}
-
-function safeURL(value) {
-  try {
-    const url = new URL(value);
-    return ["https:","http:"].includes(url.protocol) ? url.href : "";
-  } catch {
-    return "";
-  }
-}
-
-loadTitles();
+startApp();
 </script>
-
 </body>
-  </html>
-  
+</html>

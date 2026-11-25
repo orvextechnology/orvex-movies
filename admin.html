@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080b12">
 <title>ORVEX MOVIES Admin</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#080b12;color:white;font-family:Arial,sans-serif;padding:18px}
@@ -26,137 +27,165 @@ button.danger{background:#a52838}
 button:disabled{opacity:.5}
 .hidden{display:none!important}
 .item{background:#202a3b;padding:14px;border-radius:7px;margin:12px 0}
-.item p{font-size:13px;color:#bbb;line-height:1.5}
+.item p{font-size:13px;color:#bbb;line-height:1.5;overflow-wrap:anywhere}
 .status{font-size:12px;color:#f0bd65}
 .message{font-size:13px;color:#bbb;line-height:1.5;white-space:pre-wrap}
 .actions{display:flex;flex-wrap:wrap;gap:5px}
-.quality-note{font-size:12px;color:#aaa;line-height:1.5;margin-top:8px}
+.note{font-size:12px;color:#aaa;line-height:1.5;margin-top:8px}
 </style>
 </head>
-<body>
 
+<body>
 <header>
-<div class="logo">ORVEX MOVIES</div>
-<div>ADMIN PANEL</div>
+ <div class="logo">ORVEX MOVIES</div>
+ <div>ADMIN PANEL</div>
 </header>
 
 <main>
+
 <section id="loginPanel" class="panel">
-<h2>Administrator Login</h2>
-<label>Email address</label>
-<input type="email" id="email" placeholder="Admin email">
-<label>Password</label>
-<input type="password" id="password" placeholder="Password">
-<button onclick="login()">Login</button>
-<p id="loginMessage" class="message"></p>
+ <h2>Administrator Login</h2>
+ <label>Email address</label>
+ <input type="email" id="email" placeholder="Admin email">
+ <label>Password</label>
+ <input type="password" id="password" placeholder="Password">
+ <button onclick="login()">Login</button>
+ <p id="loginMessage" class="message"></p>
 </section>
 
 <div id="dashboard" class="hidden">
 
 <section class="panel">
-<h2>Welcome, Administrator</h2>
-<p class="message">Manage movies, TV series and episodes here.</p>
-<button class="secondary" onclick="logout()">Logout</button>
+ <h2>Welcome, Administrator</h2>
+ <p class="message">Manage movies, TV series, genres and episodes here.</p>
+ <button class="secondary" onclick="logout()">Logout</button>
 </section>
 
 <section class="panel">
-<h2 id="formHeading">Add Movie or TV Series</h2>
+ <h2 id="formHeading">Add Movie or TV Series</h2>
 
-<label>Content type</label>
-<select id="contentType" onchange="updateForm()">
-<option value="movie">Movie</option>
-<option value="series">TV Series</option>
-</select>
+ <label>Content type</label>
+ <select id="contentType" onchange="updateForm()">
+  <option value="movie">Movie</option>
+  <option value="series">TV Series</option>
+ </select>
 
-<label>Title</label>
-<input id="title" placeholder="Enter movie or series title">
+ <label>Title</label>
+ <input id="title" placeholder="Enter movie or series title">
 
-<label>Description</label>
-<textarea id="description" placeholder="Write a short description"></textarea>
+ <label>Description</label>
+ <textarea id="description" placeholder="Write a short description"></textarea>
 
-<label>Poster image URL (optional for drafts)</label>
-<input id="poster" placeholder="https://example.com/poster.jpg">
+ <label>Category / Genre</label>
+ <select id="category">
+  <option>General</option>
+  <option>Action</option>
+  <option>Adventure</option>
+  <option>Animation</option>
+  <option>Anime</option>
+  <option>Comedy</option>
+  <option>Crime</option>
+  <option>Documentary</option>
+  <option>Drama</option>
+  <option>Family</option>
+  <option>Fantasy</option>
+  <option>Horror</option>
+  <option>K-Drama</option>
+  <option>Mystery</option>
+  <option>Romance</option>
+  <option>Sci-Fi</option>
+  <option>Thriller</option>
+  <option>War</option>
+  <option>Western</option>
+  <option>Other</option>
+ </select>
 
-<label>Backdrop image URL (optional)</label>
-<input id="backdrop" placeholder="https://example.com/backdrop.jpg">
+ <label>Poster image URL (optional for drafts)</label>
+ <input id="poster" type="url" placeholder="https://example.com/poster.jpg">
 
-<label>Release year</label>
-<input id="year" type="number" placeholder="2026">
+ <label>Backdrop image URL (optional)</label>
+ <input id="backdrop" type="url" placeholder="https://example.com/backdrop.jpg">
 
-<div id="movieVideoField">
-<h3>Movie Video Qualities</h3>
+ <label>Release year</label>
+ <input id="year" type="number" placeholder="2026">
 
-<label>240p video URL</label>
-<input id="video240" type="url" placeholder="Direct 240p MP4 URL">
+ <div id="movieVideoField">
+  <h3>Movie Video Qualities</h3>
 
-<label>360p video URL</label>
-<input id="video360" type="url" placeholder="Direct 360p MP4 URL">
+  <label>240p video URL</label>
+  <input id="video240" type="url" placeholder="Direct 240p MP4 URL">
 
-<label>480p video URL</label>
-<input id="video480" type="url" placeholder="Direct 480p MP4 URL">
+  <label>360p video URL</label>
+  <input id="video360" type="url" placeholder="Direct 360p MP4 URL">
 
-<label>720p video URL</label>
-<input id="video720" type="url" placeholder="Direct 720p MP4 URL">
+  <label>480p video URL</label>
+  <input id="video480" type="url" placeholder="Direct 480p MP4 URL">
 
-<p class="quality-note">
-Enter a separate direct video link for each quality you have.
-Leave unavailable qualities empty. The existing video link is retained as the 720p link when editing older movies.
-</p>
-</div>
+  <label>720p video URL</label>
+  <input id="video720" type="url" placeholder="Direct 720p MP4 URL">
 
-<label>Publishing status</label>
-<select id="status">
-<option value="draft">Save as draft</option>
-<option value="published">Publish</option>
-</select>
+  <p class="note">Enter direct video links for the qualities you have. Leave unavailable qualities empty.</p>
+ </div>
 
-<p class="message">Only publish movies and videos you own or have permission to distribute. Video links must be compatible with browser playback.</p>
+ <label>Publishing status</label>
+ <select id="status">
+  <option value="draft">Save as draft</option>
+  <option value="published">Publish</option>
+ </select>
 
-<button onclick="saveContent()" id="saveButton">Save Content</button>
-<button class="secondary hidden" id="cancelEdit" onclick="cancelEditing()">Cancel Edit</button>
-<p id="formMessage" class="message"></p>
+ <p class="message">Only publish content you own or have permission to distribute. Use authorized video sources.</p>
+
+ <button onclick="saveContent()" id="saveButton">Save Content</button>
+ <button class="secondary hidden" id="cancelEdit" onclick="cancelEditing()">Cancel Edit</button>
+ <p id="formMessage" class="message"></p>
 </section>
 
 <section class="panel hidden" id="episodePanel">
-<h2>Add Episode to a Series</h2>
+ <h2>Add Episode to a Series</h2>
 
-<label>Select series</label>
-<select id="episodeSeries"></select>
+ <label>Select series</label>
+ <select id="episodeSeries"></select>
 
-<label>Season number</label>
-<input id="season" type="number" min="1" value="1">
+ <label>Season number</label>
+ <input id="season" type="number" min="1" value="1">
 
-<label>Episode number</label>
-<input id="episodeNumber" type="number" min="1" value="1">
+ <label>Episode number</label>
+ <input id="episodeNumber" type="number" min="1" value="1">
 
-<label>Episode title</label>
-<input id="episodeTitle" placeholder="Episode title">
+ <label>Episode title</label>
+ <input id="episodeTitle" placeholder="Episode title">
 
-<label>Episode description</label>
-<textarea id="episodeDescription" placeholder="Episode description"></textarea>
+ <label>Episode description</label>
+ <textarea id="episodeDescription" placeholder="Episode description"></textarea>
 
-<label>Authorized episode video URL</label>
-<input id="episodeVideo" placeholder="https://example.com/episode.mp4">
+ <label>Episode video link</label>
+ <input id="episodeVideo" type="url" placeholder="Paste authorized MP4 or YouTube link">
 
-<button onclick="saveEpisode()">Save Episode</button>
-<p id="episodeMessage" class="message"></p>
+ <p class="note">
+ You can enter a direct MP4 link or a YouTube video link.
+ YouTube playback will be enabled on the viewer page in our next update.
+ </p>
+
+ <button onclick="saveEpisode()" id="episodeSaveButton">Save Episode</button>
+ <p id="episodeMessage" class="message"></p>
 </section>
 
 <section class="panel">
-<h2>Your Content</h2>
-<button class="secondary" onclick="loadContent()">Refresh Content</button>
-<div id="contentList"><p class="message">Loading content...</p></div>
+ <h2>Your Content</h2>
+ <button class="secondary" onclick="loadContent()">Refresh Content</button>
+ <div id="contentList"><p class="message">Loading content...</p></div>
 </section>
 
 <section class="panel">
-<h2>Episodes</h2>
-<div id="episodeList"><p class="message">Loading episodes...</p></div>
+ <h2>Episodes</h2>
+ <div id="episodeList"><p class="message">Loading episodes...</p></div>
 </section>
 
 </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 const SUPABASE_URL="https://dfoxaomvdsrylreiqaum.supabase.co";
 const SUPABASE_KEY="sb_publishable_oMRvFbAXw15r_RlBw_jSxQ_Z1QVEP4d";
@@ -173,6 +202,14 @@ function escapeHTML(value){
  return String(value??"").replace(/[&<>"']/g,c=>({
   "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
  }[c]));
+}
+
+function validURL(value){
+ if(!value)return true;
+ try{
+  const u=new URL(value);
+  return u.protocol==="https:"||u.protocol==="http:";
+ }catch(e){return false;}
 }
 
 async function login(){
@@ -234,11 +271,10 @@ function clearForm(){
  [
   "title","description","poster","backdrop","year",
   "video240","video360","video480","video720"
- ].forEach(id=>{
-  el(id).value="";
- });
+ ].forEach(id=>el(id).value="");
 
  el("contentType").value="movie";
+ el("category").value="General";
  el("status").value="draft";
  updateForm();
 }
@@ -257,6 +293,14 @@ async function saveContent(){
   return;
  }
 
+ const urls=["poster","backdrop","video240","video360","video480","video720"];
+ for(const id of urls){
+  if(!validURL(el(id).value.trim())){
+   msg("formMessage","Please enter a valid image or video URL in the "+id+" field.");
+   return;
+  }
+ }
+
  const video240=el("video240").value.trim();
  const video360=el("video360").value.trim();
  const video480=el("video480").value.trim();
@@ -266,6 +310,7 @@ async function saveContent(){
   title,
   content_type:type,
   description:el("description").value.trim(),
+  category:el("category").value,
   poster_url:el("poster").value.trim(),
   backdrop_url:el("backdrop").value.trim(),
   release_year:el("year").value?Number(el("year").value):null,
@@ -286,7 +331,6 @@ async function saveContent(){
  el("saveButton").disabled=true;
 
  let result;
-
  if(editingId){
   result=await db.from("titles").update(record).eq("id",editingId);
  }else{
@@ -319,13 +363,14 @@ async function loadContent(){
 
  if(!titles.length){
   el("contentList").innerHTML='<p class="message">No content has been added yet.</p>';
+  updateSeriesOptions();
   return;
  }
 
  el("contentList").innerHTML=titles.map(item=>`
   <div class="item">
    <h3>${escapeHTML(item.title)}</h3>
-   <p>${escapeHTML(item.content_type)} • ${escapeHTML(item.release_year||"Year not set")}</p>
+   <p>${escapeHTML(item.content_type)} • ${escapeHTML(item.category||"General")} • ${escapeHTML(item.release_year||"Year not set")}</p>
    <p class="status">Status: ${escapeHTML(item.status)}</p>
    <div class="actions">
     <button onclick="editTitle('${item.id}')">Edit</button>
@@ -354,6 +399,7 @@ function editTitle(id){
  el("contentType").disabled=true;
  el("title").value=item.title||"";
  el("description").value=item.description||"";
+ el("category").value=item.category||"General";
  el("poster").value=item.poster_url||"";
  el("backdrop").value=item.backdrop_url||"";
  el("year").value=item.release_year||"";
@@ -361,8 +407,6 @@ function editTitle(id){
  el("video240").value=item.video_url_240p||"";
  el("video360").value=item.video_url_360p||"";
  el("video480").value=item.video_url_480p||"";
-
- // Keep older movie links in the 720p field.
  el("video720").value=item.video_url_720p||item.video_url||"";
 
  el("status").value=item.status||"draft";
@@ -448,20 +492,34 @@ async function saveEpisode(){
  };
 
  if(!record.title||!record.video_url){
-  msg("episodeMessage","Enter an episode title and an authorized video URL.");
+  msg("episodeMessage","Enter an episode title and video link.");
+  return;
+ }
+
+ if(!validURL(record.video_url)){
+  msg("episodeMessage","Please enter a valid YouTube or direct video URL.");
+  return;
+ }
+
+ if(!Number.isInteger(record.season_number)||record.season_number<1||
+    !Number.isInteger(record.episode_number)||record.episode_number<1){
+  msg("episodeMessage","Season and episode numbers must be at least 1.");
   return;
  }
 
  msg("episodeMessage","Saving episode...");
+ el("episodeSaveButton").disabled=true;
 
  const {error}=await db.from("episodes").insert(record);
+
+ el("episodeSaveButton").disabled=false;
 
  if(error){
   msg("episodeMessage","Error: "+error.message);
   return;
  }
 
- msg("episodeMessage","Episode saved successfully!");
+ msg("episodeMessage","Episode saved successfully! Viewer playback support for YouTube is the next update.");
 
  el("episodeTitle").value="";
  el("episodeDescription").value="";
@@ -490,7 +548,8 @@ async function loadEpisodes(){
   <div class="item">
    <h3>${escapeHTML(ep.title)}</h3>
    <p>Series: ${escapeHTML(ep.titles?.title||"Unknown")}</p>
-   <p>Season ${ep.season_number} • Episode ${ep.episode_number}</p>
+   <p>Season ${escapeHTML(ep.season_number)} • Episode ${escapeHTML(ep.episode_number)}</p>
+   <p>Video: ${escapeHTML(ep.video_url)}</p>
    <button class="danger" onclick="deleteEpisode('${ep.id}')">Delete Episode</button>
   </div>
  `).join("");
@@ -525,4 +584,5 @@ db.auth.onAuthStateChange((event,session)=>{
 start();
 </script>
 </body>
-</html>
+ </html>
+ 

@@ -125,6 +125,10 @@ button:disabled{opacity:.5}
   <input id="video720" type="url" placeholder="Direct 720p MP4 URL">
 
   <p class="note">Enter direct video links for the qualities you have. Leave unavailable qualities empty.</p>
+  <label>English Subtitle URL (.vtt or .srt)</label>
+<input id="subtitle" type="url" placeholder="https://example.com/movie-subtitles.vtt">
+
+<p class="note">Optional. Add an authorized English subtitle file for this movie.</p>
  </div>
 
  <label>Publishing status</label>
@@ -160,7 +164,9 @@ button:disabled{opacity:.5}
 
  <label>Episode video link</label>
  <input id="episodeVideo" type="url" placeholder="Paste authorized MP4 or YouTube link">
-
+<label>English Episode Subtitle URL (.vtt)</label>
+<input id="episodeSubtitle" type="url" placeholder="https://example.com/episode-subtitles.vtt">
+<p class="note">Optional. Use a WebVTT (.vtt) subtitle file.</p>
  <p class="note">
  You can enter a direct MP4 link or a YouTube video link.
  YouTube playback will be enabled on the viewer page in our next update.
@@ -269,7 +275,7 @@ function clearForm(){
  el("contentType").disabled=false;
 
  [
-  "title","description","poster","backdrop","year",
+  "title","description","poster","backdrop","year","subtitle"
   "video240","video360","video480","video720"
  ].forEach(id=>el(id).value="");
 
@@ -323,6 +329,8 @@ async function saveContent(){
   video_url_360p:type==="movie"?(video360||null):null,
   video_url_480p:type==="movie"?(video480||null):null,
   video_url_720p:type==="movie"?(video720||null):null,
+
+  subtitle_url:el("subtitle").value.trim()||null,
 
   status:el("status").value
  };
@@ -403,7 +411,7 @@ function editTitle(id){
  el("poster").value=item.poster_url||"";
  el("backdrop").value=item.backdrop_url||"";
  el("year").value=item.release_year||"";
-
+el("subtitle").value=item.subtitle_url||"";
  el("video240").value=item.video_url_240p||"";
  el("video360").value=item.video_url_360p||"";
  el("video480").value=item.video_url_480p||"";
@@ -488,8 +496,9 @@ async function saveEpisode(){
   episode_number:Number(el("episodeNumber").value),
   title:el("episodeTitle").value.trim(),
   description:el("episodeDescription").value.trim(),
-  video_url:el("episodeVideo").value.trim()
- };
+  video_url:el("episodeVideo").value.trim(),
+subtitle_url:el("episodeSubtitle").value.trim()||null
+};
 
  if(!record.title||!record.video_url){
   msg("episodeMessage","Enter an episode title and video link.");
@@ -524,7 +533,7 @@ async function saveEpisode(){
  el("episodeTitle").value="";
  el("episodeDescription").value="";
  el("episodeVideo").value="";
-
+el("episodeSubtitle").value="";
  await loadEpisodes();
 }
 
